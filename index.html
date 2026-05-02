@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CLUTCH | Multi-PC Codex orchestration for AI and robotics labs</title>
+    <meta
+      name="description"
+      content="CLUTCH is a local-first Codex orchestration layer for multi-PC AI and robotics lab workflows, backups, reproducibility evidence, and visible collab monitoring."
+    >
+    <meta property="og:title" content="CLUTCH | Multi-PC Codex orchestration">
+    <meta
+      property="og:description"
+      content="A local-first orchestration layer for Codex sessions, multi-PC collaboration, visible monitoring, snapshots, backups, and bounded away development."
+    >
+    <meta property="og:image" content="assets/clutch.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="#top">CLUTCH</a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#tutorial">Tutorial</a>
+          <a href="#prompts">Prompts</a>
+          <a href="#install">Install</a>
+        </div>
+        <a class="nav-action" href="https://github.com/TREX-CLUTCH/clutch-public">GitHub</a>
+      </nav>
+
+      <div class="hero-media" aria-hidden="true">
+        <img src="assets/clutch.png" alt="">
+      </div>
+
+      <section class="hero-content">
+        <p class="eyebrow">Multi-PC Codex orchestration</p>
+        <h1>CLUTCH</h1>
+        <p class="lead">
+          Coordinate Codex sessions, worker PCs, shared artifacts, visible
+          collab monitoring, reproducible snapshots, and bounded away
+          development plans for AI and robotics labs.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/TREX-CLUTCH/clutch-public">View on GitHub</a>
+          <a class="button secondary" href="#install">Start locally</a>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="intro band" aria-labelledby="intro-title">
+        <div class="section-inner intro-grid">
+          <div>
+            <p class="section-label">Why it exists</p>
+            <h2 id="intro-title">Research projects rarely live on one clean laptop.</h2>
+          </div>
+          <p>
+            CLUTCH is designed for AI and robotics teams where code, datasets,
+            model weights, robot logs, and compute roles live across multiple
+            machines. It gives Codex a durable re-entry layer, then keeps
+            project state, collab context, backups, and recovery evidence visible
+            to the operator.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="features" aria-labelledby="features-title">
+        <div class="section-inner">
+          <p class="section-label">Core advantages</p>
+          <h2 id="features-title">Built for multi-PC Codex work, not just a prettier prompt.</h2>
+          <div class="feature-grid">
+            <article class="feature-card accent-green">
+              <h3>Multi-PC collab</h3>
+              <p>Main and worker sessions can coordinate through project roles, file transport, task records, and peer freshness checks.</p>
+            </article>
+            <article class="feature-card accent-cyan">
+              <h3>Visible monitor</h3>
+              <p>The collab monitor shows role source, active request context, recent results, and stale peer signals without hiding work in chat history.</p>
+            </article>
+            <article class="feature-card accent-amber">
+              <h3>Large-project recovery</h3>
+              <p>Code, docs, snapshots, metadata, local backups, and artifact pointers are tracked separately from heavy model and dataset files.</p>
+            </article>
+            <article class="feature-card accent-red">
+              <h3>Away development</h3>
+              <p>Long-running Codex work gets an explicit objective, allowed scope, stop conditions, checkpoints, and verification trail.</p>
+            </article>
+            <article class="feature-card accent-violet">
+              <h3>Web console</h3>
+              <p>Project warnings, readiness checks, command previews, backup evidence, Help, and collab status are available from a local browser.</p>
+            </article>
+            <article class="feature-card accent-gray">
+              <h3>Private by design</h3>
+              <p>First-run setup asks for local folders, machine identity, GitHub preference, and collab choices instead of embedding lab-specific data.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow band" id="workflow" aria-labelledby="workflow-title">
+        <div class="section-inner">
+          <p class="section-label">Operating model</p>
+          <h2 id="workflow-title">A practical loop for distributed lab work.</h2>
+          <ol class="steps">
+            <li>
+              <span>01</span>
+              <div>
+                <h3>Enter through CLUTCH</h3>
+                <p>Every Codex session starts with <code>session-entry</code>, finds the project, and restores the right local context.</p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>Bind roles clearly</h3>
+                <p>Attach one machine as <code>main</code> and optional peers as <code>worker</code> or <code>observer</code>.</p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>Move work with evidence</h3>
+                <p>Use collab transport, shared docs, task records, snapshots, and artifact pointers so handoffs are inspectable.</p>
+              </div>
+            </li>
+            <li>
+              <span>04</span>
+              <div>
+                <h3>Recover deliberately</h3>
+                <p>Before risky changes, CLUTCH can create backups and metadata that explain what can be restored and what stays local.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section topology" id="tutorial" aria-labelledby="tutorial-title">
+        <div class="section-inner">
+          <p class="section-label">Guided first run</p>
+          <h2 id="tutorial-title">Install once, then let CLUTCH teach each PC how to join.</h2>
+          <div class="topology-layout">
+            <div class="topology-diagram" aria-label="Example CLUTCH multi-PC topology">
+              <div class="node main-node">
+                <strong>Main PC</strong>
+                <span>Operator session</span>
+              </div>
+              <div class="transport-line">
+                <span>collab transport</span>
+              </div>
+              <div class="node worker-node">
+                <strong>Worker PC</strong>
+                <span>Compute or hardware context</span>
+              </div>
+              <div class="node artifact-node">
+                <strong>Artifact store</strong>
+                <span>Large files stay local</span>
+              </div>
+              <div class="node monitor-node">
+                <strong>Web monitor</strong>
+                <span>Roles, requests, results</span>
+              </div>
+            </div>
+            <div class="tutorial-list">
+              <article>
+                <span>1</span>
+                <div>
+                  <h3>Run the first-run wizard</h3>
+                  <p>Choose your CLUTCH home, project root, artifact store, machine id, GitHub preference, and whether this PC should auto-attach.</p>
+                </div>
+              </article>
+              <article>
+                <span>2</span>
+                <div>
+                  <h3>Register a project</h3>
+                  <p>Point CLUTCH at an existing git workspace or a new project folder while CLUTCH keeps its own metadata under your local CLUTCH home.</p>
+                </div>
+              </article>
+              <article>
+                <span>3</span>
+                <div>
+                  <h3>Add a second PC when needed</h3>
+                  <p>Use a shared folder over wired LAN or another trusted local path, then attach machines as main and worker without embedding peer addresses in the public package.</p>
+                </div>
+              </article>
+              <article>
+                <span>4</span>
+                <div>
+                  <h3>Watch the evidence</h3>
+                  <p>Use the Web console to inspect warnings, collab monitor state, backup readiness, snapshots, and away-development boundaries.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section prompts" id="prompts" aria-labelledby="prompts-title">
+        <div class="section-inner">
+          <p class="section-label">Example operator prompts</p>
+          <h2 id="prompts-title">Natural-language control stays at the center.</h2>
+          <div class="prompt-grid">
+            <figure>
+              <figcaption>Project re-entry</figcaption>
+              <pre><code>Attach this session to my robot-policy project as main and show what needs attention before I start.</code></pre>
+            </figure>
+            <figure>
+              <figcaption>Multi-PC handoff</figcaption>
+              <pre><code>Ask the worker machine to inspect the training logs and report only memory bottlenecks and failed runs.</code></pre>
+            </figure>
+            <figure>
+              <figcaption>Away development</figcaption>
+              <pre><code>Prepare an away plan for low-risk documentation and test hardening. Stop before publishing or touching hardware.</code></pre>
+            </figure>
+            <figure>
+              <figcaption>Recovery check</figcaption>
+              <pre><code>Before this refactor, create a local backup and tell me whether the project is reproducible from git and artifact pointers.</code></pre>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section safety" aria-labelledby="safety-title">
+        <div class="section-inner safety-grid">
+          <div>
+            <p class="section-label">Safety boundary</p>
+            <h2 id="safety-title">CLUTCH coordinates work. It does not grant hidden authority.</h2>
+          </div>
+          <div class="boundary-list">
+            <p>Hardware motion, sudo, credential changes, destructive restore, and public publication still require explicit operator approval.</p>
+            <p>The public package ships templates and guides, not private machine names, LAN IPs, SSH aliases, account tokens, robot profiles, or lab runtime state.</p>
+            <p>Large-project backup is explicit: source and docs can live in git, while datasets, model weights, logs, and media are recorded as artifact pointers unless you choose another policy.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="install band" id="install" aria-labelledby="install-title">
+        <div class="section-inner install-grid">
+          <div>
+            <p class="section-label">Install path</p>
+            <h2 id="install-title">Start from the release zip, then configure your own machine.</h2>
+            <p>
+              CLUTCH does not require sudo. The public first-run wizard records
+              your own CLUTCH home, project root, artifact store, machine id,
+              GitHub setup preference, and optional multi-PC collab plan.
+            </p>
+          </div>
+          <div class="terminal" aria-label="Installation commands">
+            <pre><code>unzip clutch-public-*.zip
+cd clutch-public-*
+export CLUTCH_HOME="${CLUTCH_HOME:-$HOME/.clutch}"
+bash installer/install.sh --prefix "$CLUTCH_HOME"
+cd "$CLUTCH_HOME/foundation/current"
+python3 installer/clutch_first_run_wizard.py
+python3 scripts/clutch_ctl.py session-entry</code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="section-inner footer-inner">
+        <span>CLUTCH</span>
+        <a href="https://github.com/TREX-CLUTCH/clutch-public">GitHub repository</a>
+      </div>
+    </footer>
+  </body>
+</html>
