@@ -8,8 +8,8 @@ CLUTCH is a local-first Codex orchestration layer for AI and robotics teams
 that work across multiple PCs, shared datasets, local artifacts, and long-lived
 project contexts.
 
-Landing page preview:
-[https://trex-clutch.github.io/clutch-landing-preview/](https://trex-clutch.github.io/clutch-landing-preview/)
+Landing page:
+[https://trex-clutch.github.io/CLUTCH/](https://trex-clutch.github.io/CLUTCH/)
 
 It is built for the common lab setup where one workstation owns the main
 development session, another machine has extra compute or hardware access, and
@@ -36,10 +36,9 @@ CLUTCH provides that layer without shipping your credentials, machine names, IP
 addresses, or private project data.
 
 For a visual overview with example prompts and a GitHub call-to-action, open
-the online preview or static source:
-[Online CLUTCH landing preview](https://trex-clutch.github.io/clutch-landing-preview/)
-and [CLUTCH public landing page](site/index.html). For copy-ready operating
-examples, use the [Prompt Cookbook](docs/prompt-cookbook.md).
+the [official CLUTCH landing page](https://trex-clutch.github.io/CLUTCH/)
+or the [static source](site/index.html). For copy-ready operating examples, use
+the [Prompt Cookbook](docs/prompt-cookbook.md).
 
 ## 10-Minute First Use Path
 
@@ -125,14 +124,6 @@ make verify
 
 For feature-by-feature validation, use the
 [Verification Matrix](docs/verification-matrix.md).
-
-To run the read-only final visibility review without changing any GitHub
-setting:
-
-```bash
-make visibility-review
-python3 tools/clutch_public_visibility_review.py --root . --json
-```
 
 To check only the static landing page over local HTTP:
 
@@ -255,41 +246,31 @@ When the request falls outside that plan, Codex should stop and ask.
 
 See [Away Development](docs/away-development.md).
 
-## Release Confidence
+## Trust And Verification
 
-The public package is built around a private-first release process. Before a
-staged tree is treated as publishable, CLUTCH expects:
+CLUTCH is designed so a new user can inspect the local install before relying
+on it. After extracting a release, these checks are useful even without private
+lab infrastructure:
 
-- the public release gate to report `ready_for_operator_review`;
-- scanner checks to report `finding_count=0`;
-- GitHub Actions to run the same scanner, release gate, visibility review,
-  landing smoke, Web smoke, collab smoke, and install smoke on public pushes
-  and pull requests;
-- issue templates and the PR template to keep reports sanitized and
-  operator-approval boundaries visible;
-- `make verify` to provide a familiar public repo verification entrypoint;
-- `tools/clutch_public_verify.py --root . --json` to run the scanner, release
-  gate, visibility review, landing smoke, Web smoke, collab smoke, and install
-  smoke from one command;
-- `make visibility-review` and
-  `tools/clutch_public_visibility_review.py --root . --json` to produce a
-  read-only final visibility review with
-  `remote_visibility_change_performed=false`;
-- `tools/clutch_public_landing_smoke.py --root . --json` to prove the static
-  landing page, CSS, brand image, and GitHub call-to-action load over HTTP;
-- `tools/clutch_public_web_smoke.py --root . --json` to prove first-run Web
-  auto-start, `/api/health`, static assets, Help, Monitor, Backups, and command
-  registry readiness;
-- `make collab-smoke` and `tools/clutch_public_collab_smoke.py --root . --json`
-  to prove main/worker/request/result evidence in the packaged file transport;
-- `tools/clutch_public_install_smoke.py` to pass clean install smoke and
-  first-project smoke in a fresh home;
-- Web console health to match the packaged backend;
-- release zip, checksum, manifest, and release notes to stay together;
-- artifact hygiene to block cache folders, bytecode, build output, logs,
-  release bundles, and restore-smoke output from the public tree;
-- private-first publication to remain in place until the operator explicitly
-  approves changing repository visibility.
+- `make verify` runs the public verification entrypoint from the repo root.
+- `make landing-smoke` proves the static landing page, CSS, brand image, and
+  GitHub call-to-action load over local HTTP.
+- `make web-smoke` proves first-run Web auto-start, `/api/health`, static
+  assets, Help, Monitor, Backups, and command registry readiness.
+- `make collab-smoke` proves main/worker/request/result evidence in the
+  packaged file transport.
+- Release zip, SHA256 checksum, release notes, and manifest files should be
+  kept together when you download or archive a CLUTCH release.
+- Direct script forms are also available when you need JSON output:
+  `tools/clutch_public_landing_smoke.py --root . --json`,
+  `tools/clutch_public_web_smoke.py --root . --json`, and
+  `tools/clutch_public_collab_smoke.py --root . --json`.
+- `python3 installer/clutch_doctor.py` checks the installed local layout.
+- The [Verification Matrix](docs/verification-matrix.md) maps each user-facing
+  capability to the command that proves it.
+- The [First-Use Acceptance Runbook](docs/first-use-acceptance.md) gives a
+  clean first-project path for users who want to test CLUTCH in a disposable
+  workspace.
 
 ## What CLUTCH Does Not Do
 
@@ -307,7 +288,6 @@ staged tree is treated as publishable, CLUTCH expects:
 - [Command Cheat Sheet](docs/command-cheatsheet.md)
 - [Verification Matrix](docs/verification-matrix.md)
 - [Prompt Cookbook](docs/prompt-cookbook.md)
-- [Public Launch Readiness Brief](docs/launch-readiness-brief.md)
 - [FAQ](docs/faq.md)
 - [Privacy And Redaction](docs/privacy-and-redaction.md)
 - [Codex Session Entry](docs/codex-session-entry.md)
@@ -318,31 +298,5 @@ staged tree is treated as publishable, CLUTCH expects:
 - [Doctor And Troubleshooting](docs/troubleshooting.md)
 - [First-Run Wizard](docs/FIRST_RUN_WIZARD.md)
 - [Contributing](CONTRIBUTING.md)
-- [GitHub Publication Guide](docs/github-publication.md)
-- [Landing Page Deployment](docs/landing-page.md)
 - [Public Demo Script](docs/public-demo-script.md)
-- [Release Artifacts](docs/release-artifacts.md)
-- [Public Release Checklist](docs/public-release-checklist.md)
-- [Public Release Notes Template](docs/release-notes-template.md)
 - [Security Boundary](SECURITY.md)
-
-## Public Release Status
-
-This distribution is prepared through a private-first release process. A release
-candidate should become public only after scanner checks, collab smoke,
-clean-home install smoke, Web health smoke, the read-only public release gate,
-release checksums, and explicit operator approval. Use the
-[Public Launch Readiness Brief](docs/launch-readiness-brief.md) and
-[Public Release Checklist](docs/public-release-checklist.md) before changing
-repository visibility.
-
-## Final Visibility Gate
-
-Final visibility gate: before changing repository visibility, finish this
-review and keep the repository private until the operator approves the switch.
-The private staging repository is not the public release. Before changing
-repository visibility, confirm that the staged tree came from a clean public
-export, the release gate and scanner both report zero findings, clean install
-and first-project smokes passed, collab smoke passed, generated release notes
-contain no private machine/path/commit evidence, and the operator has
-explicitly approved the manual visibility change.

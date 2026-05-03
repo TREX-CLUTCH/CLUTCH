@@ -567,7 +567,7 @@ function initialLang() {
 }
 
 function displayLang() {
-  return state.activeView === "help" ? "en" : state.lang;
+  return state.lang;
 }
 
 function t(key, fallback = key) {
@@ -604,6 +604,11 @@ function renderI18nText() {
     const active = button.dataset.lang === state.lang;
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
+  });
+  document.querySelectorAll("[data-help-lang]").forEach((node) => {
+    const active = node.dataset.helpLang === lang;
+    node.hidden = !active;
+    node.setAttribute("aria-hidden", String(!active));
   });
   renderCommandSurface();
 }

@@ -138,8 +138,8 @@ Expected result:
 - the GitHub call-to-action points to the intended public repository;
 - `tools/clutch_public_landing_smoke.py --root . --json` reports
   `status=passed` and fetches the linked Prompt Cookbook, First-Use Acceptance
-  Runbook, Launch Readiness Brief, and FAQ;
-- the repository homepage points to the online landing page preview;
+  Runbook, Verification Matrix, and FAQ;
+- the repository homepage points to the official landing page;
 - no public hosting or GitHub Pages setting is enabled until the operator
   explicitly approves it.
 
@@ -361,7 +361,7 @@ it manually before upload.
 ## 11. Final Visibility Gate
 
 Before changing repository visibility, treat the private staging repository as
-review evidence only. The landing page preview proves visual readiness; it is
+review evidence only. The official landing page proves visual readiness; it is
 not approval to publish the repo or upload a release.
 
 - scanner result is `finding_count=0`;

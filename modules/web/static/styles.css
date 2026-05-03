@@ -1339,6 +1339,10 @@ h3 {
   gap: 24px;
 }
 
+.help-copy[hidden] {
+  display: none;
+}
+
 .help-section {
   display: grid;
   gap: 12px;

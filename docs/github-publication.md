@@ -8,10 +8,10 @@ change by itself.
 
 Use public-safe metadata only:
 
-- repository name: `clutch-public`;
+- repository name: `CLUTCH`;
 - description: `Local-first multi-PC Codex orchestration for AI and robotics labs`;
 - homepage URL:
-  `https://trex-clutch.github.io/clutch-landing-preview/`;
+  `https://trex-clutch.github.io/CLUTCH/`;
 - suggested topics: `codex`, `multi-pc`, `robotics`, `ai-agents`,
   `orchestration`, `backup`, `snapshots`, `collaboration`.
 
@@ -24,14 +24,14 @@ Before changing repository visibility, the GitHub repository first screen
 should show:
 
 - the CLUTCH brand image from `assets/clutch.png`;
-- the online landing page preview link near the top of `README.md`;
+- the official landing page link near the top of `README.md`;
 - a concise explanation of CLUTCH as a local-first Codex orchestration layer;
 - the multi-PC collab, visible monitor, large-project recovery, Web console,
   and away-development advantages;
 - a quick install path that starts from a release zip and user-owned
   `CLUTCH_HOME`;
 - `make verify` as the main public validation command;
-- `make visibility-review` as the read-only final public visibility review;
+- the Trust And Verification section for user-run smoke checks;
 - `make collab-smoke` as the local proof that the packaged file transport can
   create main/worker/request/result monitor evidence;
 - the final visibility gate language that says public conversion requires
@@ -86,7 +86,7 @@ the public switch after reviewing:
 - read-only visibility review output;
 - clean install and first-project smoke;
 - collab smoke;
-- landing page smoke and online preview;
+- landing page smoke and official Pages URL;
 - generated release notes;
 - release zip checksums;
 - GitHub first screen and repository metadata.

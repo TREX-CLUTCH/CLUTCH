@@ -187,9 +187,8 @@ Use these talking points for the README, landing page, and live demo:
 - The Prompt Cookbook gives copy-ready examples for first install, first
   project, multi-PC collab, backup/artifacts, away development, Web UI, public
   release review, and safety boundaries.
-- The Public Launch Readiness Brief aligns the GitHub page, landing page,
-  first install path, release evidence, and final private-first visibility
-  decision before launch.
+- The Verification Matrix maps visible CLUTCH capabilities to commands a user
+  can run from their own checkout.
 - The public distribution asks users for their own GitHub, folders, machine id,
   artifact store, and collab topology instead of shipping private lab settings.
 - Large files do not have to be committed to git. CLUTCH records artifact

@@ -2,8 +2,8 @@
 
 CLUTCH ships a static landing page under `site/index.html`. It is designed to
 explain the system before installation: multi-PC collab, visible monitoring,
-backup and reproducibility, away development, artifact hygiene, and the
-private-first publication boundary.
+backup and reproducibility, away development, artifact boundaries, and the
+first-use verification path.
 
 ## Local Preview
 
@@ -23,7 +23,7 @@ http://127.0.0.1:8080/site/
 
 The page must load `site/styles.css` and `assets/clutch.png` from the same
 release tree. The smoke also fetches the key linked public docs from the page:
-Prompt Cookbook, First-Use Acceptance Runbook, Launch Readiness Brief, and FAQ.
+Prompt Cookbook, First-Use Acceptance Runbook, Verification Matrix, and FAQ.
 It must not depend on external scripts, private lab URLs, private machine names,
 private IP addresses, or credentials.
 
@@ -58,8 +58,8 @@ Before treating the page as publishable:
 - confirm `assets/clutch.png` is present and visually appropriate;
 - confirm only the hero H1 uses the sans-serif face, while all other text uses
   the serif face;
-- confirm the page explains clean install smoke, artifact hygiene, and
-  private-first publication;
+- confirm the page explains clean first run, local smoke checks, and artifact
+  boundaries from a user perspective;
 - keep the release zip, checksum file, manifest, and release notes together.
 
 The landing page is marketing-facing, but it is also release evidence. If it

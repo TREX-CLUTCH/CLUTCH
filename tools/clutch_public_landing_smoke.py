@@ -99,13 +99,13 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
         "assets/clutch.png": f"{base_url}/assets/clutch.png",
         "docs/prompt-cookbook.md": f"{base_url}/docs/prompt-cookbook.md",
         "docs/first-use-acceptance.md": f"{base_url}/docs/first-use-acceptance.md",
-        "docs/launch-readiness-brief.md": f"{base_url}/docs/launch-readiness-brief.md",
+        "docs/verification-matrix.md": f"{base_url}/docs/verification-matrix.md",
         "docs/faq.md": f"{base_url}/docs/faq.md",
     }
     markdown_needles = {
         "docs/prompt-cookbook.md": ("Prompt Cookbook", "First Install", "Multi-PC Collab"),
         "docs/first-use-acceptance.md": ("First-Use Acceptance Runbook", "session_entry_repeat"),
-        "docs/launch-readiness-brief.md": ("Public Launch Readiness Brief", "GitHub Page Review"),
+        "docs/verification-matrix.md": ("Verification Matrix", "First Install Gates"),
         "docs/faq.md": ("Frequently Asked Questions", "public repository visibility"),
     }
     fetch_results: list[dict[str, Any]] = []
@@ -142,10 +142,10 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
                     needles=(
                         "<h1>CLUTCH for Research Agents</h1>",
                         "View on GitHub",
-                        "https://github.com/TREX-CLUTCH/clutch-public",
+                        "https://github.com/TREX-CLUTCH/CLUTCH",
                         "styles.css",
                         "../assets/clutch.png",
-                        "Public release confidence",
+                        "Inspect CLUTCH before you depend on it.",
                     ),
                 )
             elif path.endswith(".css"):

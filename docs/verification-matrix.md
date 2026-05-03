@@ -76,5 +76,5 @@ Users choose their own transport after install.
 | Release package | `python3 scripts/clutch_public_release_package.py --output-dir /path/to/release-output --version <version> --clean --json` | `status=ready_for_private_release_upload` |
 | Artifact integrity | `sha256sum -c clutch-public-<version>.sha256` | checksum reports `OK` |
 | Release notes review | inspect `clutch-public-<version>.release-notes.md` | notes describe public behavior and contain no private machine, path, IP, SSH, credential, or private repo evidence |
-| GitHub first screen | inspect `README.md` in the private staging repository | brand image, landing preview, quick start, feature list, release confidence, and final visibility gate are visible |
+| GitHub first screen | inspect `README.md` in the release repository | brand image, official landing page, quick start, feature list, and Trust And Verification are visible |
 | Manual public switch | no command in CLUTCH performs this | the repository stays private until the operator explicitly approves the visibility change |

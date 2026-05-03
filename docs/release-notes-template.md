@@ -57,9 +57,8 @@ optional collab settings.
 - Prompt Cookbook with copy-ready prompts for first install, first project,
   multi-PC collab, backup/artifacts, away development, Web UI, public release
   review, and safety boundaries.
-- Public Launch Readiness Brief that aligns the GitHub page, landing page,
-  package evidence, first install path, core differentiators, and final
-  private-first visibility decision.
+- Trust And Verification guidance that points users to `make verify`,
+  first-use acceptance, smoke checks, and the Verification Matrix.
 - First-Use Acceptance Runbook that defines the install, first-run, doctor,
   session-entry, session_entry_repeat, first project, backup, snapshot, and
   refresh checks a new user should pass without repeated setup prompts or
@@ -143,7 +142,6 @@ Record the actual evidence for this release:
 - Release Artifacts: `docs/release-artifacts.md`
 - Verification Matrix: `docs/verification-matrix.md`
 - Prompt Cookbook: `docs/prompt-cookbook.md`
-- Public Launch Readiness Brief: `docs/launch-readiness-brief.md`
 - First-Use Acceptance Runbook: `docs/first-use-acceptance.md`
 - Public Release Checklist: `docs/public-release-checklist.md`
 - Security Boundary: `SECURITY.md`

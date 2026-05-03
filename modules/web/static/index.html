@@ -348,6 +348,7 @@
           </section>
 
           <section id="helpView" class="view" data-view-panel="help">
+            <div class="help-copy" data-help-lang="en" lang="en">
             <div class="help-hero">
               <img src="/assets/clutch-representative.png" alt="CLUTCH representative mark" />
               <div>
@@ -503,7 +504,7 @@
                     <p>
                       Advanced commands are low-frequency evidence checks:
                       lifecycle, snapshot metadata, artifact pointers,
-                      onboarding, and release readiness. Apply and publish
+                      onboarding, and release validation. Apply and publish
                       paths still require approval through the Codex session.
                     </p>
                   </article>
@@ -573,7 +574,7 @@
                     <p>
                       Compare local backups, local manifests, promoted metadata
                       refs, and restore readiness. Recovery readiness and clean
-                      release readiness are related but different judgements.
+                      release validation are related but different judgements.
                     </p>
                   </article>
                   <article class="help-card">
@@ -653,16 +654,22 @@
               <section class="help-section">
                 <div class="small-label">Natural language</div>
                 <h2>Common Requests</h2>
+                <p>
+                  These prompts are safe starting points to paste into the
+                  active Codex session. The Web console shows state and
+                  evidence; the operator still gives development instructions
+                  and approval decisions in natural language.
+                </p>
                 <div class="help-grid help-guide-grid">
                   <article class="help-card">
                     <h3>Enter A New Session</h3>
                     <div class="help-example"><strong>Example prompt</strong><p>I opened a new Codex session. Check the CLUTCH entry state.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>`session-entry` reports project match, re-entry docs, attach command, and sync state.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`session-entry` reports project match, re-entry docs, attach guidance, notification mode, and sync state.</p></div>
                   </article>
                   <article class="help-card">
-                    <h3>Attach To A Project</h3>
-                    <div class="help-example"><strong>Example prompt</strong><p>Attach this session to my project as main.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>`session-attach` creates the active binding and Sessions shows the main role.</p></div>
+                    <h3>Pick A Project Role</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Attach this session to my-project as main and show the start docs I should read first.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`session-attach` creates the active binding and the Sessions view shows the main role and re-entry document order.</p></div>
                   </article>
                   <article class="help-card">
                     <h3>Summarize Status</h3>
@@ -670,24 +677,29 @@
                     <div class="help-example result"><strong>Expected result</strong><p>`project-status`, `overview`, and attention plans summarize repos, bindings, backups, next actions, safe-to-run state, and approval-required state.</p></div>
                   </article>
                   <article class="help-card">
-                    <h3>Refresh Readiness</h3>
-                    <div class="help-example"><strong>Example prompt</strong><p>Check whether this PC can continue the project, including git sync and metadata.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>`project-refresh --dry-run` previews repo sync, snapshot metadata, versioning readiness, and restore review together.</p></div>
+                    <h3>Create A First Project</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Register this git folder as a CLUTCH project and confirm CLUTCH metadata stays outside the project repo.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-create` records the machine-local workspace while keeping project source and local CLUTCH state clearly separated.</p></div>
                   </article>
                   <article class="help-card">
-                    <h3>Inspect Repo Sync</h3>
-                    <div class="help-example"><strong>Example prompt</strong><p>Inspect only the clone or pull plan for the project repos.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>Advanced `project-sync --dry-run` shows clone, pull, blocked, and dirty states without changing the workspace.</p></div>
+                    <h3>Dry-Run Readiness</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Check whether this PC can continue the project, including git sync and snapshot metadata, without writing changes.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-refresh --dry-run` previews repo sync, versioning, restore readiness, and artifact pointer state without changing the workspace.</p></div>
                   </article>
                   <article class="help-card">
-                    <h3>Review Project History</h3>
-                    <div class="help-example"><strong>Example prompt</strong><p>Show the docs and recovery evidence that explain this project state.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>`project-history` indexes `PROJECT_HISTORY.md`, recent git commits, backups, snapshots, metadata, away logs, and intents.</p></div>
+                    <h3>Back Up Before Risk</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Create a local project backup before this refactor and explain what files and repo bundles were captured.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-backup` records backup id, repo bundle, copied docs, missing optional files, and restore location.</p></div>
                   </article>
                   <article class="help-card">
-                    <h3>Create A Backup</h3>
-                    <div class="help-example"><strong>Example prompt</strong><p>Create a local project backup before this risky change.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>`project-backup` records backup id, repo bundle, copied docs, and missing optional files.</p></div>
+                    <h3>Snapshot Reproducibility</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Snapshot the current state and tell me which commit and artifact pointers would be needed to restore it later.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-snapshot --write` records source head, dirty state, validation command, artifact pointers, and restore plan in a manifest.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Inspect Artifact Boundaries</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Identify datasets, model weights, logs, and caches that should stay out of git and be recorded as artifact pointers.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>CLUTCH reviews data policy and artifact pointer state, then separates source-controlled files from external storage records.</p></div>
                   </article>
                   <article class="help-card">
                     <h3>Check The Collab Monitor</h3>
@@ -695,14 +707,44 @@
                     <div class="help-example result"><strong>Expected result</strong><p>`collab-monitor-status` separates visible/running state, CLUTCH binding, transport role, and task history.</p></div>
                   </article>
                   <article class="help-card">
-                    <h3>Prepare Away Work</h3>
-                    <div class="help-example"><strong>Example prompt</strong><p>Create an away-development plan and continue only inside the approved scope.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>The away plan records objective, allowed scope, stop condition, verification, and expiry.</p></div>
+                    <h3>Confirm Worker Roles</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Before I delegate work, confirm the CLUTCH binding and collab transport roles agree.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>The Monitor view separates role source, binding role, transport role, target source, peer freshness, and delegation risk.</p></div>
                   </article>
                   <article class="help-card">
-                    <h3>Prepare A Release</h3>
-                    <div class="help-example"><strong>Example prompt</strong><p>Check whether the next release is ready against the validation matrix.</p></div>
-                    <div class="help-example result"><strong>Expected result</strong><p>Tests, self-test, web health, `web-console-status`, release zip, SHA256, GitHub release state, and multi-PC version alignment are checked.</p></div>
+                    <h3>Delegate A Narrow Task</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Ask the worker machine to inspect only training logs and report memory bottlenecks and failed runs. Do not edit files.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>The main session states approval boundaries and scope, then worker task, ack, and result evidence remain visible.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Prepare Away Work</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Create an away-development plan for documentation and test hardening only. Do not publish, delete, or touch hardware.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>The away plan records objective, allowed scope, forbidden actions, stop conditions, verification, checkpoints, and expiry.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Report Away Progress</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Report what changed under the current away plan, which checks passed, and where you must stop.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-away-report` summarizes progress, scope compliance, validation results, and remaining stop conditions.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Prepare GitHub Sync</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Show the remote and GitHub setup I need for online sync using my own account, without storing secrets in CLUTCH.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>CLUTCH explains remotes, branches, account state, and sync policy while keeping tokens and private keys outside CLUTCH metadata.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Onboard A New PC</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Show a dry-run plan for adding a new worker PC, including bootstrap, shared folder, collab setup, and monitor checks.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`machine-collab-guide` outlines install, machine id, shared transport, role attach, and monitor validation before applying changes.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Troubleshoot Web Startup</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>If the Web console does not open or my project is missing, narrow the cause in the safest order.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`web-console-status`, `clutch_doctor`, `session-entry`, project registry, and local settings are checked read-only first.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Verify A Local Install</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Before I rely on this install, run the local checks that prove Help, Monitor, backups, and command registry readiness.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>The Web smoke, doctor, and verification matrix checks confirm the local install is ready for first use.</p></div>
                   </article>
                 </div>
               </section>
@@ -719,6 +761,351 @@
                   runbook, and approval boundary.
                 </p>
               </section>
+            </div>
+            </div>
+
+            <div class="help-copy" data-help-lang="ko" lang="ko" hidden>
+              <div class="help-hero">
+                <img src="/assets/clutch-representative.png" alt="CLUTCH representative mark" />
+                <div>
+                  <div class="small-label">도움말</div>
+                  <h2>CLUTCH 운영 프로토콜</h2>
+                  <p>
+                    CLUTCH는 Codex 세션, 프로젝트, PC, 저장소, 백업,
+                    스냅샷, multi-PC 협업을 한 곳에서 다시 진입하고
+                    확인하게 해주는 local-first 운영 계층입니다.
+                    이 도움말은 버튼 설명서가 아니라 어떤 순서로
+                    확인하고, 어떤 일은 활성 Codex 세션에 자연어로
+                    맡기며, 어떤 일은 명시적 운영자 승인이 필요한지
+                    알려주는 운영 기준입니다.
+                  </p>
+                  <p>
+                    CLUTCH는 여러 워크스테이션, 큰 모델과 데이터셋,
+                    하드웨어 근처 승인 경계, 장시간 작업이 겹치는
+                    AI 및 로보틱스 연구실 환경을 기준으로 설계되었습니다.
+                  </p>
+                </div>
+              </div>
+
+              <div class="help-layout">
+                <section class="help-section">
+                  <div class="small-label">왜 CLUTCH인가</div>
+                  <h2>핵심 차별점</h2>
+                  <div class="help-grid">
+                    <article class="help-card">
+                      <h3>Multi-PC Codex 협업</h3>
+                      <p>
+                        CLUTCH는 하나의 Codex 세션만 관리하지 않습니다.
+                        프로젝트, 역할, machine-local 경로를 기준으로
+                        main, worker, observer 세션을 묶고 task, ack,
+                        result, heartbeat, 파일 handoff 근거를 같은
+                        프로젝트 맥락에 보관합니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>보이는 협업 모니터</h3>
+                      <p>
+                        Monitor 탭은 worker가 fresh한지, 어떤 프로젝트
+                        task를 보고 있는지, transport role과 CLUTCH
+                        project binding이 일치하는지 보여줍니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>큰 프로젝트 복구 근거</h3>
+                      <p>
+                        모델 weight, dataset, robot bag, media, checkpoint를
+                        git에 강제로 넣지 않습니다. CLUTCH는 source head,
+                        경로, URI, hash, artifact pointer, 검증 명령을
+                        함께 기록해 복구 판단을 돕습니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Away Development</h3>
+                      <p>
+                        자리비움 작업은 무제한 자동화가 아닙니다. 목표,
+                        허용 범위, 중단 조건, 검증, 만료 시각을 기록하고
+                        범위를 벗어나면 멈추고 물어봐야 합니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Web UI와 알림</h3>
+                      <p>
+                        Web UI는 raw CLUTCH 상태를 운영자가 읽을 수 있는
+                        상태로 바꿉니다. 알림은 장시간 작업이 다시
+                        주의를 요구할 때 운영자를 불러오지만, 승인 자체를
+                        대신하지는 않습니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>연구실 환경 기준</h3>
+                      <p>
+                        여러 PC에 일을 나누고, 큰 artifact는 git 밖에 두며,
+                        하드웨어 근처 작업에는 선명한 승인 경계가 필요한
+                        연구 그룹을 기준으로 설계되었습니다.
+                      </p>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">첫 실행</div>
+                  <h2>설치와 Web 시작</h2>
+                  <p>
+                    공개 배포판의 first-run wizard는 이 PC의 로컬 설정만
+                    만듭니다: machine id, 프로젝트 workspace root,
+                    artifact store, GitHub 설정 방식, collab 선호도,
+                    admin guard, Web console 선호도입니다. 사전 설정된
+                    계정, IP 주소, SSH alias, token, 연구실 경로는
+                    포함하지 않습니다.
+                  </p>
+                  <ol class="help-steps">
+                    <li>first-run wizard를 한 번 실행해 이 PC의 CLUTCH 로컬 설정을 만듭니다.</li>
+                    <li>새 Codex 세션은 `session-entry`로 시작합니다. 설정되어 있으면 Web console backend도 함께 시작됩니다.</li>
+                    <li>로컬 desktop 세션은 브라우저를 열 수 있고, SSH/headless 세션은 URL을 출력해야 합니다.</li>
+                    <li>GitHub 동기화는 사용자가 직접 계정과 remote를 설정한 뒤에만 사용됩니다.</li>
+                    <li>collab 설정은 wired LAN, SSH, Codex exec, shared folder를 안내할 수 있지만 peer 주소와 자격 증명은 로컬에 남습니다.</li>
+                    <li>첫 설정 뒤에는 Dashboard와 Help가 다음 행동을 설명해야 하며 같은 설정 질문을 반복하지 않아야 합니다.</li>
+                  </ol>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">운영 순서</div>
+                  <h2>Operating Protocol</h2>
+                  <p>
+                    먼저 이 Codex 세션이 어떤 프로젝트와 역할에 attach되어
+                    있는지 확인합니다. 그 다음 Dashboard와 Monitor를 읽고,
+                    실제 개발 지시는 Web 버튼을 늘리는 대신 활성 Codex
+                    세션에 자연어로 줍니다.
+                  </p>
+                  <ol class="help-steps">
+                    <li>`session-entry`로 프로젝트 매칭, re-entry 문서, sync 상태, attach 안내를 확인합니다.</li>
+                    <li>역할이 중요하면 `session-attach --project ... --bind-role main|worker|observer`로 명시적으로 attach합니다.</li>
+                    <li>Sessions 탭에서 active binding을 확인합니다. `machine_role_policy=none`인 프로젝트는 active binding이 역할 기준입니다.</li>
+                    <li>Dashboard warning은 자동 실패가 아니라 review evidence입니다. dirty work, publish gate, stale history는 서로 다른 의미입니다.</li>
+                    <li>`safe_to_run_without_approval=True`는 read-only 점검을 뜻하고, `approval_required=True`는 apply, publish, restore, lifecycle 변경에 승인이 필요하다는 뜻입니다.</li>
+                    <li>routine work, 복잡한 수정, worker 위임, away-development 계획은 현재 Codex 세션에 자연어로 요청합니다.</li>
+                    <li>위험한 수정, handoff, release 전에는 backup, snapshot, metadata, validation evidence, artifact pointer를 확인합니다.</li>
+                    <li>restore, online publication, sudo, service, network, kernel, udev, credential, destructive restore, hardware action은 명시적 승인이 필요합니다.</li>
+                  </ol>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">버튼과 명령</div>
+                  <h2>Command Principles</h2>
+                  <div class="help-grid">
+                    <article class="help-card">
+                      <h3>Codex 세션이 우선</h3>
+                      <p>
+                        실제 개발 지시는 활성 Codex 세션에 자연어로 줍니다.
+                        세션은 binding, away plan, checkpoint, approval
+                        boundary를 읽은 뒤 필요한 CLI 명령을 선택합니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>기본 명령은 작게</h3>
+                      <p>
+                        기본 버튼은 status, preview, monitor, backup evidence
+                        같이 반복해서 확인할 가치가 있는 read-only 중심
+                        작업으로 제한합니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>고급 명령은 근거</h3>
+                      <p>
+                        lifecycle, snapshot metadata, artifact pointer,
+                        onboarding, release validation 같은 고급 명령은
+                        저빈도 evidence check입니다. apply와 publish는
+                        Codex 세션을 통한 승인이 필요합니다.
+                      </p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Web 버튼은 위임이 아님</h3>
+                      <p>
+                        Web 버튼은 등록된 CLUTCH CLI 또는 API check를
+                        실행하고 근거를 보여줍니다. 임의의 자연어 작업을
+                        다른 PC나 worker 세션에 보내는 기능이 아닙니다.
+                      </p>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">콘솔 읽기</div>
+                  <h2>Reading The Console</h2>
+                  <div class="help-grid">
+                    <article class="help-card">
+                      <h3>Dashboard</h3>
+                      <p>프로젝트와 머신 상태를 처음 보는 곳입니다. warning은 검토가 필요한 근거이며 항상 실패를 뜻하지는 않습니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Sessions</h3>
+                      <p>프로젝트별 PC 역할을 main, worker, observer 기준으로 확인합니다. 만료되거나 released된 binding은 현재 권한이 아닙니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Monitor</h3>
+                      <p>main과 worker monitor가 보이는지, heartbeat가 fresh한지, 최근 task/ack/result가 어떤 프로젝트에 속하는지 확인합니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Projects</h3>
+                      <p>선택 프로젝트의 repo sync, versioning readiness, backup, away plan, data handling, online policy를 확인합니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Backups</h3>
+                      <p>local backup, manifest, promoted metadata ref, restore readiness를 비교합니다. 복구 준비와 clean release validation은 다른 판단입니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Machines</h3>
+                      <p>이 PC의 install, reconnect, runtime, online identity, worker link, target source, repo alignment를 확인합니다.</p>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">Collab</div>
+                  <h2>Collab Standard</h2>
+                  <p>
+                    CLUTCH collab의 역할 기준은 각 PC의 active project
+                    binding입니다. collab transport는 task, heartbeat,
+                    evidence를 운반하는 구현 계층이며, transport role이
+                    CLUTCH project binding을 대체하지 않습니다.
+                  </p>
+                  <ol class="help-steps">
+                    <li>main 세션은 프로젝트 방향, approval boundary, checkpoint context를 유지합니다.</li>
+                    <li>worker는 자기 machine-local workspace에서 제한된 작업을 수행합니다.</li>
+                    <li>Monitor는 local role, peer role, CLUTCH binding, transport role, target source, task, ack, result, heartbeat를 보여줘야 합니다.</li>
+                    <li>role mismatch나 binding-role-only 상태가 보이면 위임 전에 Codex 세션에 역할 상태 해석을 요청합니다.</li>
+                  </ol>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">데이터와 공개</div>
+                  <h2>Data, Backups, and Release</h2>
+                  <div class="help-grid">
+                    <article class="help-card">
+                      <h3>Project Data Policy</h3>
+                      <p>데이터 정책은 프로젝트별입니다. 작은 프로젝트는 git과 local backup으로 충분할 수 있지만, 모델/학습 작업은 checkpoint, dataset, raw log, cache를 artifact pointer로 기록하는 편이 안전합니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Backup / Snapshot</h3>
+                      <p>backup은 로컬 복구 bundle이고 snapshot은 특정 시점의 재현성 metadata입니다. release 전에는 code head, dirty state, validation command, artifact pointer가 같은 상태를 설명해야 합니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>Online Publish</h3>
+                      <p>online git은 프로젝트가 설정한 경우 승인된 code source of truth가 됩니다. publish 권한은 project policy와 publisher machine 기준을 따릅니다.</p>
+                    </article>
+                    <article class="help-card">
+                      <h3>New PC Onboarding</h3>
+                      <p>새 PC는 `machine-collab-guide`로 시작합니다. 반복 가능한 onboarding은 release tag, manifest, bootstrap path, registration review와 연결되어야 합니다.</p>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">자연어 요청</div>
+                  <h2>Common Requests</h2>
+                  <p>
+                    아래 문장들은 그대로 Codex에 붙여 넣어도 되는 운영자용
+                    예시입니다. CLUTCH Web 버튼은 상태와 근거를 보여주는
+                    보조 도구이고, 실제 개발 지시와 판단 요청은 활성 Codex
+                    세션에 자연어로 전달하는 흐름이 기본입니다.
+                  </p>
+                  <div class="help-grid help-guide-grid">
+                    <article class="help-card">
+                      <h3>새 세션 진입</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>새 Codex 세션을 열었어. CLUTCH 진입 상태 확인해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`session-entry`가 프로젝트 매칭, re-entry 문서, attach 안내, 알림 모드, sync 상태를 한 번에 보여줍니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>프로젝트 선택과 역할 지정</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>이 세션을 my-project에 main으로 attach하고, 지금 내가 봐야 할 시작 문서를 순서대로 알려줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`session-attach`가 active binding을 만들고 Sessions에서 main role과 re-entry 문서 순서를 보여줍니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>상태 요약</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>현재 프로젝트 상태와 attention item을 쉬운 말로 요약해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`project-status`, `overview`, attention plan이 repo, binding, backup, next action, approval boundary를 요약합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>첫 프로젝트 등록</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>이 git 폴더를 CLUTCH 프로젝트로 등록하고, CLUTCH 메타데이터가 프로젝트 repo 안에 섞이지 않는지 확인해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`project-create`가 machine-local workspace를 등록하고, 프로젝트 소스와 CLUTCH 로컬 상태의 경계를 분리합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>읽기 전용 readiness 확인</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>이 PC가 프로젝트를 계속 진행해도 되는지, git sync와 snapshot metadata까지 dry-run으로 점검해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`project-refresh --dry-run`이 repo sync, versioning, restore readiness, artifact pointer 상태를 쓰기 없이 보여줍니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>위험한 수정 전 백업</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>이 리팩터링 전에 local backup을 만들고, 어떤 파일과 repo bundle이 백업됐는지 설명해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`project-backup`이 backup id, repo bundle, 복사된 문서, 빠진 선택 파일, 복구 위치를 기록합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>재현성 스냅샷</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>지금 상태를 snapshot으로 남기고, 나중에 어떤 commit과 artifact pointer로 복구해야 하는지 알려줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`project-snapshot --write`가 source head, dirty state, validation command, restore plan을 manifest로 남깁니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>Artifact 경계 점검</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>이 프로젝트에서 git에 넣으면 안 되는 dataset, model weight, log, cache가 무엇인지 artifact pointer 기준으로 점검해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>Data policy와 artifact pointer 상태를 보고, 큰 파일을 git에 넣지 않고 경로/URI/hash/manifest로 남길 대상을 정리합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>Collab monitor 확인</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>main과 worker collab monitor가 둘 다 보이는지 확인해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`collab-monitor-status`가 visible/running state, CLUTCH binding, transport role, task history를 분리해서 보여줍니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>Worker 위임 전 역할 확인</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>worker에게 일을 맡기기 전에 CLUTCH binding과 collab transport role이 일치하는지 확인해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>Monitor가 role source, binding role, transport role, target source, stale history를 분리하고 위임 가능 여부를 설명합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>Worker에게 제한된 조사 요청</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>worker 머신에게 training log만 읽고, 메모리 병목과 실패 run만 요약해 달라고 맡겨줘. 파일 수정은 하지 말라고 해.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>main 세션이 승인 경계와 작업 범위를 명시하고, worker result가 task/ack/result evidence로 남습니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>Away plan 만들기</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>내가 자리비운 동안 문서 보강과 테스트 hardening만 진행하는 away plan을 만들어줘. publish, 삭제, hardware 관련 작업은 금지해.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>objective, allowed scope, forbidden actions, stop conditions, verification, checkpoint, expiry가 계획에 기록됩니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>자리비움 작업 보고</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>현재 away plan 기준으로 무엇을 했고, 어떤 테스트를 통과했고, 어디에서 멈춰야 하는지 보고해줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`project-away-report`가 진행 상황, 범위 준수, 검증 결과, 다음 stop condition을 운영자에게 요약합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>GitHub 설정 준비</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>내 계정으로 online sync를 쓰려면 어떤 remote와 GitHub 설정이 필요한지, 비밀값 없이 절차만 보여줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>CLUTCH는 token이나 private key를 저장하지 않고, 사용자가 설정해야 할 remote, branch, account 상태를 안내합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>새 PC 연결 준비</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>새 PC를 CLUTCH worker로 붙일 때 필요한 bootstrap, shared folder, collab 설정을 dry-run으로 보여줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`machine-collab-guide`가 설치, machine id, shared transport, role attach, monitor 확인 절차를 실제 적용 없이 안내합니다.</p></div>
+                    </article>
+                    <article class="help-card">
+                      <h3>문제 해결 시작</h3>
+                      <div class="help-example"><strong>예시 프롬프트</strong><p>Web console이 안 열리거나 프로젝트가 안 보이면, 내가 안전하게 확인할 수 있는 순서대로 원인을 좁혀줘.</p></div>
+                      <div class="help-example result"><strong>기대 결과</strong><p>`web-console-status`, `clutch_doctor`, `session-entry`, project registry, local settings를 read-only로 확인합니다.</p></div>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="help-section">
+                  <div class="small-label">안전</div>
+                  <h2>Approval and Safety Boundary</h2>
+                  <p>
+                    CLUTCH 상태, worker 응답, monitor heartbeat는 robot motion,
+                    hardware recovery, sudo, network, kernel, udev, service
+                    change, credential handling, destructive restore, online
+                    publication을 승인하지 않습니다. CLUTCH의 역할은 올바른
+                    프로젝트, 머신, 세션, 경로, 백업, runbook, approval
+                    boundary를 보이게 하는 것입니다.
+                  </p>
+                </section>
+              </div>
             </div>
           </section>
         </main>

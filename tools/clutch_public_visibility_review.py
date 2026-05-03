@@ -37,10 +37,10 @@ REQUIRED_FILES = (
 
 REQUIRED_TEXT = {
     "README.md": (
-        "Final Visibility Gate",
-        "before changing repository visibility",
-        "tools/clutch_public_visibility_review.py --root . --json",
-        "make visibility-review",
+        "Trust And Verification",
+        "https://trex-clutch.github.io/CLUTCH/",
+        "make verify",
+        "make web-smoke",
     ),
     "SECURITY.md": (
         "operator explicitly approves",
