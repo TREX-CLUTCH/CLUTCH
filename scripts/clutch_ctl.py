@@ -76,6 +76,9 @@ DEFAULT_PRE_WEB_REFERENCE_PROJECTS: tuple[str, ...] = ()
 DEFAULT_FOUNDATION_REMOTE_URL = ""
 DEFAULT_OPS_REMOTE_URL = ""
 DEFAULT_COLLAB_TRANSPORT_REMOTE_URL = ""
+MAINTAINER_PUSH_GUARD_REPOS = {"clutch-foundation", "clutch-ops"}
+MAINTAINER_PUSH_GUARD_BRANCHES = {"main"}
+MAINTAINER_PUSH_GUARD_BYPASS_ENV = "CLUTCH_MAINTAINER_PUSH_GUARD_BYPASS"
 DEFAULT_COLLAB_PROTOCOL_VERSION = "clutch.collab.v1"
 COLLAB_TRANSPORT_MANIFEST_FILENAMES = (
     "collab_transport_manifest.json",
@@ -1905,6 +1908,58 @@ def project_machine_is_online_publisher(project: dict[str, Any], machine_id: str
         "policy_machine_ids": policy_machine_ids,
         "online_publisher_machine_ids": publisher_machine_ids,
         "preferred_main_machine_ids": preferred_main_machine_ids,
+    }
+
+
+def project_readiness_profile(project: dict[str, Any]) -> str:
+    raw_profile = str(
+        project.get("readiness_profile")
+        or project.get("project_readiness_profile")
+        or project.get("versioning_readiness_profile")
+        or ""
+    ).strip().lower()
+    profile = slugify(raw_profile, "").replace("-", "_")
+    aliases = {
+        "strict": "strict",
+        "release": "strict",
+        "core": "strict",
+        "clutch_core": "strict",
+        "collaborative": "collaborative",
+        "collab": "collaborative",
+        "research": "collaborative",
+        "normal": "collaborative",
+        "relaxed": "relaxed",
+        "scratch": "relaxed",
+        "personal": "relaxed",
+        "experiment": "relaxed",
+    }
+    if profile in aliases:
+        return aliases[profile]
+    project_id = str(project.get("project_id") or "").strip().lower()
+    if project_id == "clutch":
+        return "strict"
+    return "collaborative"
+
+
+def project_readiness_policy(project: dict[str, Any]) -> dict[str, Any]:
+    profile = project_readiness_profile(project)
+    machine_role_policy = project_machine_role_policy(project)
+    strict = profile == "strict"
+    return {
+        "schema": "clutch.project_readiness_policy.v1",
+        "profile": profile,
+        "versioning_attention_required": strict,
+        "versioning_ready_required_for_refresh": strict,
+        "publisher_attention_required": strict,
+        "main_binding_attention_required": strict or machine_role_policy != "none",
+        "maintainer_items_user_visible": strict,
+        "operator_summary": (
+            "strict CLUTCH infrastructure readiness is enforced for this project"
+            if strict
+            else "collaborative research readiness keeps maintainer-only versioning and publisher items out of researcher-facing alerts"
+            if profile == "collaborative"
+            else "relaxed readiness treats publication and reproducibility metadata as advisory unless local setup is at risk"
+        ),
     }
 
 
@@ -6102,6 +6157,113 @@ def ensure_admin_unlocked() -> tuple[bool, dict[str, Any], dict[str, Any]]:
     return admin_unlock_active(guard, state), guard, state
 
 
+def maintainer_push_guard_repo_name(remote_url: str, repo_path: Path | None = None) -> str:
+    candidate = str(remote_url or "").strip().rstrip("/")
+    if candidate:
+        if candidate.startswith("git@") and ":" in candidate:
+            candidate = candidate.rsplit(":", 1)[-1]
+        else:
+            parsed = urlparse(candidate)
+            if parsed.path:
+                candidate = parsed.path
+        candidate = candidate.rstrip("/")
+        name = Path(candidate).name
+        if name.endswith(".git"):
+            name = name[:-4]
+        name = slugify(name, "")
+        if name:
+            return name
+    if repo_path is not None:
+        return slugify(repo_path.expanduser().resolve().name, "")
+    return ""
+
+
+def parse_pre_push_records(stdin_text: str) -> list[dict[str, str]]:
+    records: list[dict[str, str]] = []
+    for raw_line in str(stdin_text or "").splitlines():
+        parts = raw_line.split()
+        if len(parts) < 4:
+            continue
+        records.append(
+            {
+                "local_ref": parts[0],
+                "local_sha": parts[1],
+                "remote_ref": parts[2],
+                "remote_sha": parts[3],
+            }
+        )
+    return records
+
+
+def pre_push_record_branch(record: dict[str, str]) -> str:
+    remote_ref = str(record.get("remote_ref") or "")
+    local_ref = str(record.get("local_ref") or "")
+    for ref in (remote_ref, local_ref):
+        if ref.startswith("refs/heads/"):
+            return ref.removeprefix("refs/heads/")
+    return ""
+
+
+def build_maintainer_push_guard_payload(
+    *,
+    remote_name: str,
+    remote_url: str,
+    repo_path: Path,
+    stdin_text: str,
+) -> dict[str, Any]:
+    repo_name = maintainer_push_guard_repo_name(remote_url, repo_path)
+    records = parse_pre_push_records(stdin_text)
+    protected_repo = repo_name in MAINTAINER_PUSH_GUARD_REPOS
+    protected_records = [
+        dict(item, branch=pre_push_record_branch(item))
+        for item in records
+        if protected_repo and pre_push_record_branch(item) in MAINTAINER_PUSH_GUARD_BRANCHES
+    ]
+    unlocked, guard, state = ensure_admin_unlocked()
+    bypassed = str(os.environ.get(MAINTAINER_PUSH_GUARD_BYPASS_ENV) or "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "y",
+    }
+    blocked = bool(protected_records) and not unlocked and not bypassed
+    status = (
+        "blocked_admin_guard"
+        if blocked
+        else "allowed_bypass"
+        if bool(protected_records) and bypassed
+        else "allowed_unlocked"
+        if bool(protected_records)
+        else "allowed"
+    )
+    return {
+        "schema": "clutch.maintainer_push_guard.v1",
+        "remote_name": str(remote_name or ""),
+        "remote_url": str(remote_url or ""),
+        "repo_path": str(repo_path.expanduser()),
+        "repo_name": repo_name,
+        "protected_repo": protected_repo,
+        "protected_repos": sorted(MAINTAINER_PUSH_GUARD_REPOS),
+        "protected_branches": sorted(MAINTAINER_PUSH_GUARD_BRANCHES),
+        "record_count": len(records),
+        "protected_record_count": len(protected_records),
+        "protected_records": protected_records,
+        "admin_guard": redacted_admin_guard(guard),
+        "admin_unlocked": unlocked,
+        "admin_unlocked_until_ns": state.get("unlocked_until_ns"),
+        "bypass_env": MAINTAINER_PUSH_GUARD_BYPASS_ENV,
+        "bypassed": bypassed,
+        "blocked": blocked,
+        "ok": not blocked,
+        "status": status,
+        "operator_summary": (
+            "CLUTCH maintainer push guard blocked protected main-branch push until admin-unlock is active"
+            if blocked
+            else "CLUTCH maintainer push guard allows this push"
+        ),
+    }
+
+
 def run_git(
     repo_path: Path,
     argv: list[str],
@@ -8947,6 +9109,7 @@ def build_project_versioning_readiness_payload(
     project_id = str(project.get("project_id") or "")
     selected_repo_id = slugify(repo_id_filter, "") if repo_id_filter else ""
     integration_profile = project_integration_profile(project)
+    readiness_policy = project_readiness_policy(project)
     publisher_context = project_machine_is_online_publisher(project, machine_id)
     local_online_publisher = bool(publisher_context.get("is_online_publisher", True))
     artifact_pointer_policy = project_artifact_pointer_policy(project)
@@ -9387,6 +9550,8 @@ def build_project_versioning_readiness_payload(
         "repo_filter": selected_repo_id,
         "read_only": True,
         "integration_profile": integration_profile,
+        "readiness_profile": readiness_policy["profile"],
+        "readiness_policy": readiness_policy,
         "publisher_context": publisher_context,
         "configuration_ready": configuration_ready,
         "routine_publish_ready": routine_publish_ready,
@@ -9520,6 +9685,11 @@ def compact_versioning_readiness(payload: dict[str, Any]) -> dict[str, Any]:
         if isinstance(payload.get("publisher_context"), dict)
         else {}
     )
+    readiness_policy = (
+        payload.get("readiness_policy", {})
+        if isinstance(payload.get("readiness_policy"), dict)
+        else {}
+    )
     version_authority = (
         payload.get("version_authority", {})
         if isinstance(payload.get("version_authority"), dict)
@@ -9528,6 +9698,8 @@ def compact_versioning_readiness(payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "ok": bool(payload.get("ok")),
         "integration_profile": integration_profile,
+        "readiness_profile": str(payload.get("readiness_profile") or readiness_policy.get("profile") or ""),
+        "readiness_policy": readiness_policy,
         "publisher_context": publisher_context,
         "version_authority": version_authority,
         "configuration_ready": bool(payload.get("configuration_ready")),
@@ -12092,6 +12264,9 @@ def build_project_refresh_payload(
         raise RuntimeError("Unable to resolve local machine id. Pass --machine-id explicitly.")
 
     project_id = str(project.get("project_id") or project_name)
+    readiness_policy = project_readiness_policy(project)
+    readiness_profile = str(readiness_policy.get("profile") or "collaborative")
+    versioning_required_for_refresh = bool(readiness_policy.get("versioning_ready_required_for_refresh"))
     local_machine_id = resolve_local_machine_id(ops_root)
     explicit_machine_scope = bool(str(machine_id_arg or "").strip())
     target_machine_is_local = bool(not explicit_machine_scope or not local_machine_id or machine_id == local_machine_id)
@@ -12519,30 +12694,60 @@ def build_project_refresh_payload(
         message = "current code state is not covered by local snapshot or promoted metadata evidence"
         if metadata_compact.get("missing_remote_ref_count"):
             message = "current code may be ready, but this PC has not fetched all remote snapshot metadata refs"
-        steps.append(
-            project_refresh_step(
-                "versioning_readiness",
-                title="Versioning readiness",
-                ok=False,
-                status="reproducibility_gap",
-                summary=message,
-                action=refresh_command(write_yes=True),
-                blocking=True,
+        if versioning_required_for_refresh:
+            steps.append(
+                project_refresh_step(
+                    "versioning_readiness",
+                    title="Versioning readiness",
+                    ok=False,
+                    status="reproducibility_gap",
+                    summary=message,
+                    action=refresh_command(write_yes=True),
+                    blocking=True,
+                )
             )
-        )
-        next_actions.append(f"inspect {project_versioning_readiness_command()}")
+            next_actions.append(f"inspect {project_versioning_readiness_command()}")
+        else:
+            steps.append(
+                project_refresh_step(
+                    "versioning_readiness",
+                    title="Versioning readiness",
+                    ok=True,
+                    status="maintainer_advisory",
+                    summary=(
+                        f"{readiness_profile} readiness keeps reproducibility metadata gaps as maintainer-only review"
+                    ),
+                    action=project_versioning_readiness_command(),
+                    blocking=False,
+                )
+            )
     elif int(versioning_compact.get("warning_finding_count") or 0) > 0:
-        steps.append(
-            project_refresh_step(
-                "versioning_readiness",
-                title="Versioning readiness",
-                ok=False,
-                status="warnings",
-                summary="versioning readiness has warnings after refresh checks",
-                action=project_versioning_readiness_command(),
+        if versioning_required_for_refresh:
+            steps.append(
+                project_refresh_step(
+                    "versioning_readiness",
+                    title="Versioning readiness",
+                    ok=False,
+                    status="warnings",
+                    summary="versioning readiness has warnings after refresh checks",
+                    action=project_versioning_readiness_command(),
+                )
             )
-        )
-        next_actions.append(f"inspect {project_versioning_readiness_command()}")
+            next_actions.append(f"inspect {project_versioning_readiness_command()}")
+        else:
+            steps.append(
+                project_refresh_step(
+                    "versioning_readiness",
+                    title="Versioning readiness",
+                    ok=True,
+                    status="maintainer_advisory",
+                    summary=(
+                        f"{readiness_profile} readiness keeps versioning warnings as maintainer-only review"
+                    ),
+                    action=project_versioning_readiness_command(),
+                    blocking=False,
+                )
+            )
     else:
         steps.append(
             project_refresh_step(
@@ -12640,7 +12845,10 @@ def build_project_refresh_payload(
         not blocking_steps
         and not warning_steps
         and attention_count == 0
-        and bool(versioning_compact.get("reproducibility_ready"))
+        and (
+            not versioning_required_for_refresh
+            or bool(versioning_compact.get("reproducibility_ready"))
+        )
     )
     if confirmation_required:
         operator_summary = "confirmation required before writing code or metadata sync results"
@@ -12683,6 +12891,8 @@ def build_project_refresh_payload(
             "write_requested": bool(write),
             "local_write_executed": local_write_executed,
             "ready": refresh_ready,
+            "readiness_profile": readiness_profile,
+            "versioning_ready_required_for_refresh": versioning_required_for_refresh,
         },
         "step_count": len(steps),
         "blocking_step_count": len(blocking_steps),
@@ -12690,6 +12900,9 @@ def build_project_refresh_payload(
         "steps": steps,
         "sync": compact_project_sync_readiness(sync_payload),
         "metadata_fetch": metadata_compact,
+        "readiness_profile": readiness_profile,
+        "versioning_ready_required_for_refresh": versioning_required_for_refresh,
+        "readiness_policy": readiness_policy,
         "project_status": {
             "ok": bool(project_status.get("ok")),
             "attention_count": attention_count,
@@ -13420,6 +13633,7 @@ def build_project_status_payload(
 
     machine_id_for_calls = machine_id or machine_id_arg
     integration_profile = project_integration_profile(project)
+    readiness_policy = project_readiness_policy(project)
 
     def build_sync_status_payload() -> dict[str, Any]:
         return build_project_sync_payload(
@@ -13593,6 +13807,8 @@ def build_project_status_payload(
         if isinstance(versioning_readiness.get("version_authority"), dict)
         else {}
     )
+    versioning_attention_required = bool(readiness_policy.get("versioning_attention_required"))
+    main_binding_attention_required = bool(readiness_policy.get("main_binding_attention_required"))
     metadata_refs_cover_current_heads = bool(version_authority.get("metadata_refs_cover_current_heads"))
     metadata_reproducibility_current = (
         bool(versioning_readiness.get("ok"))
@@ -13604,6 +13820,7 @@ def build_project_status_payload(
         )
     )
     attention_items: list[dict[str, Any]] = []
+    maintainer_attention_items: list[dict[str, Any]] = []
     if not sync_payload.get("all_required_available"):
         attention_items.append(
             {
@@ -13765,13 +13982,16 @@ def build_project_status_payload(
             if integration_profile.get("legacy_import")
             else "project versioning configuration is not ready"
         )
-        attention_items.append(
+        target_items = attention_items if versioning_attention_required else maintainer_attention_items
+        target_items.append(
             {
                 "kind": "versioning_readiness",
                 "severity": "needs_approval"
                 if int(versioning_readiness.get("blocking_finding_count") or 0) > 0
                 else "warning",
                 "message": message,
+                "audience": "maintainer" if not versioning_attention_required else "operator",
+                "user_visible": versioning_attention_required,
             }
         )
     elif not versioning_readiness.get("reproducibility_ready"):
@@ -13792,29 +14012,38 @@ def build_project_status_payload(
                 "current project heads are not covered by local snapshot or metadata evidence; "
                 "run project-refresh to fetch metadata, then checkpoint if still stale"
             )
-        attention_items.append(
+        target_items = attention_items if versioning_attention_required else maintainer_attention_items
+        target_items.append(
             {
                 "kind": "versioning_readiness",
                 "severity": "warning",
                 "message": message,
                 "suggested_command": f"project-refresh --project {project_id}",
                 "apply_command": f"project-refresh --project {project_id} --write --yes",
+                "audience": "maintainer" if not versioning_attention_required else "operator",
+                "user_visible": versioning_attention_required,
             }
         )
     elif int(versioning_readiness.get("warning_finding_count") or 0) > 0:
-        attention_items.append(
+        target_items = attention_items if versioning_attention_required else maintainer_attention_items
+        target_items.append(
             {
                 "kind": "versioning_readiness",
                 "severity": "warning",
                 "message": "project versioning readiness has warnings",
+                "audience": "maintainer" if not versioning_attention_required else "operator",
+                "user_visible": versioning_attention_required,
             }
         )
     elif int(versioning_readiness.get("needs_publish_repo_count") or 0) > 0:
-        attention_items.append(
+        target_items = attention_items if versioning_attention_required else maintainer_attention_items
+        target_items.append(
             {
                 "kind": "versioning_readiness",
                 "severity": "info",
                 "message": "one or more clean repos have commits ready for approved publication",
+                "audience": "publisher" if not versioning_attention_required else "operator",
+                "user_visible": versioning_attention_required,
             }
         )
     if runtime_payload and not runtime_payload.get("ok"):
@@ -13850,7 +14079,8 @@ def build_project_status_payload(
         worker_only_local = bool(local_non_main_roles) and not any(
             item.get("role") == "main" for item in local_project_bindings
         )
-        attention_items.append(
+        target_items = attention_items if main_binding_attention_required else maintainer_attention_items
+        target_items.append(
             {
                 "kind": "binding",
                 "severity": "info" if worker_only_local else "warning",
@@ -13859,11 +14089,15 @@ def build_project_status_payload(
                     if worker_only_local
                     else "local binding cache has active project bindings but no visible main binding"
                 ),
+                "audience": "maintainer" if not main_binding_attention_required else "operator",
+                "user_visible": main_binding_attention_required,
             }
         )
 
     attention_items = enrich_project_status_attention_items(project_id, attention_items)
+    maintainer_attention_items = enrich_project_status_attention_items(project_id, maintainer_attention_items)
     attention_counts = attention_severity_counts(attention_items)
+    maintainer_attention_counts = attention_severity_counts(maintainer_attention_items)
     workspace_path = machine_workspace_for_project(project, machine_id)
     data_handling = project_data_handling_summary(
         project=project,
@@ -13889,6 +14123,8 @@ def build_project_status_payload(
         "workspace_path": workspace_path,
         "data_handling": data_handling,
         "integration_profile": integration_profile,
+        "readiness_profile": readiness_policy["profile"],
+        "readiness_policy": readiness_policy,
         "project_machine_roles": project_machine_roles,
         "admin_guard": admin_guard,
         "collab_readiness": collab_readiness,
@@ -13922,6 +14158,9 @@ def build_project_status_payload(
         "attention_items": attention_items,
         "attention_count": len(attention_items),
         "attention_severity_counts": attention_counts,
+        "maintainer_attention_items": maintainer_attention_items,
+        "maintainer_attention_count": len(maintainer_attention_items),
+        "maintainer_attention_severity_counts": maintainer_attention_counts,
         "ok": project_status_ok,
     }
 
@@ -18693,6 +18932,7 @@ def summarize_overview_project(payload: dict[str, Any]) -> dict[str, Any]:
             "warning_finding_count": int(versioning_readiness.get("warning_finding_count") or 0),
             "needs_publish_repo_count": int(versioning_readiness.get("needs_publish_repo_count") or 0),
         },
+        "readiness_profile": str(payload.get("readiness_profile") or ""),
         "bindings": {
             "main_count": int(bindings.get("project_main_count") or 0),
             "worker_count": int(bindings.get("project_worker_count") or 0),
@@ -18709,6 +18949,12 @@ def summarize_overview_project(payload: dict[str, Any]) -> dict[str, Any]:
             )
         ),
         "attention_items": payload.get("attention_items", []),
+        "maintainer_attention_count": int(payload.get("maintainer_attention_count") or 0),
+        "maintainer_attention_severity_counts": (
+            payload.get("maintainer_attention_severity_counts", {})
+            if isinstance(payload.get("maintainer_attention_severity_counts"), dict)
+            else {}
+        ),
     }
 
 
@@ -23650,6 +23896,24 @@ def parse_args() -> argparse.Namespace:
     admin_status = subparsers.add_parser("admin-status")
     admin_status.add_argument("--json", action="store_true")
 
+    push_guard = subparsers.add_parser(
+        "maintainer-push-guard",
+        description="Git pre-push guard for CLUTCH foundation/ops main-branch pushes.",
+    )
+    push_guard.add_argument("--remote-name", default="")
+    push_guard.add_argument("--remote-url", default="")
+    push_guard.add_argument("--repo-path", default=".")
+    push_guard.add_argument("--stdin", action="store_true")
+    push_guard.add_argument("--json", action="store_true")
+
+    push_guard_install = subparsers.add_parser(
+        "maintainer-push-guard-install",
+        description="Install the CLUTCH maintainer pre-push guard into a local git repo.",
+    )
+    push_guard_install.add_argument("--repo-path", default=".")
+    push_guard_install.add_argument("--force", action="store_true")
+    push_guard_install.add_argument("--json", action="store_true")
+
     admin_config = subparsers.add_parser("admin-configure")
     admin_config.add_argument("--mode", choices=["command_only", "token"], default="")
     admin_config.add_argument("--enabled", action=argparse.BooleanOptionalAction, default=None)
@@ -26472,6 +26736,107 @@ def cmd_admin_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_maintainer_push_guard(args: argparse.Namespace) -> int:
+    stdin_text = sys.stdin.read() if args.stdin else ""
+    payload = build_maintainer_push_guard_payload(
+        remote_name=args.remote_name,
+        remote_url=args.remote_url,
+        repo_path=Path(args.repo_path).expanduser(),
+        stdin_text=stdin_text,
+    )
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    else:
+        print(f"maintainer_push_guard_status={payload['status']}")
+        print(f"repo_name={payload['repo_name']}")
+        print(f"protected_repo={payload['protected_repo']}")
+        print(f"protected_record_count={payload['protected_record_count']}")
+        print(f"admin_unlocked={payload['admin_unlocked']}")
+        print(f"blocked={payload['blocked']}")
+        if payload["blocked"]:
+            print("Run `python3 ~/.clutch/foundation/current/scripts/clutch_ctl.py admin-unlock` before protected main-branch pushes.")
+    return 0 if payload["ok"] else 1
+
+
+def maintainer_push_guard_hook_text() -> str:
+    ctl_path = FOUNDATION_ROOT / "scripts" / "clutch_ctl.py"
+    return "\n".join(
+        [
+            "#!/bin/sh",
+            "# CLUTCH managed maintainer pre-push guard.",
+            'repo_path="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"',
+            (
+                f'exec python3 "{ctl_path}" maintainer-push-guard '
+                '--remote-name "$1" --remote-url "$2" --repo-path "$repo_path" --stdin'
+            ),
+            "",
+        ]
+    )
+
+
+def build_maintainer_push_guard_install_payload(*, repo_path: Path, force: bool) -> dict[str, Any]:
+    repo_path = repo_path.expanduser().resolve()
+    git_dir = repo_path / ".git"
+    if not git_dir.is_dir():
+        result = subprocess.run(
+            ["git", "-C", str(repo_path), "rev-parse", "--git-dir"],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"not a git repository: {repo_path}")
+        git_dir = Path(result.stdout.strip())
+        if not git_dir.is_absolute():
+            git_dir = repo_path / git_dir
+    hook_path = git_dir / "hooks" / "pre-push"
+    existing = hook_path.exists()
+    existing_text = hook_path.read_text(encoding="utf-8", errors="replace") if existing else ""
+    managed_existing = "CLUTCH managed maintainer pre-push guard" in existing_text
+    if existing and not managed_existing and not force:
+        return {
+            "schema": "clutch.maintainer_push_guard_install.v1",
+            "ok": False,
+            "status": "existing_hook_not_overwritten",
+            "repo_path": str(repo_path),
+            "hook_path": str(hook_path),
+            "existing": True,
+            "managed_existing": False,
+            "installed": False,
+            "operator_summary": "existing non-CLUTCH pre-push hook was not overwritten; rerun with --force after review",
+        }
+    hook_path.parent.mkdir(parents=True, exist_ok=True)
+    hook_path.write_text(maintainer_push_guard_hook_text(), encoding="utf-8")
+    hook_path.chmod(0o755)
+    return {
+        "schema": "clutch.maintainer_push_guard_install.v1",
+        "ok": True,
+        "status": "installed" if not existing else "replaced",
+        "repo_path": str(repo_path),
+        "hook_path": str(hook_path),
+        "existing": existing,
+        "managed_existing": managed_existing,
+        "installed": True,
+        "operator_summary": "CLUTCH maintainer pre-push guard installed",
+    }
+
+
+def cmd_maintainer_push_guard_install(args: argparse.Namespace) -> int:
+    payload = build_maintainer_push_guard_install_payload(
+        repo_path=Path(args.repo_path).expanduser(),
+        force=bool(args.force),
+    )
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    else:
+        print(f"maintainer_push_guard_install_status={payload['status']}")
+        print(f"hook_path={payload['hook_path']}")
+        print(f"installed={payload['installed']}")
+        if payload.get("operator_summary"):
+            print(f"operator_summary={payload['operator_summary']}")
+    return 0 if payload["ok"] else 1
+
+
 def cmd_admin_configure(args: argparse.Namespace) -> int:
     if ADMIN_GUARD_PATH.exists():
         unlocked, guard_state, _ = ensure_admin_unlocked()
@@ -27268,6 +27633,7 @@ def cmd_project_status(args: argparse.Namespace) -> int:
     print(f"status={payload.get('status', '')}")
     print(f"operator_summary={payload.get('operator_summary', '')}")
     print(f"status_ok={payload['ok']}")
+    print(f"readiness_profile={payload.get('readiness_profile', '')}")
     print(f"required_repo_count={sync_payload['required_repo_count']}")
     print(f"all_required_available={sync_payload['all_required_available']}")
     print(f"all_required_sync_ready={sync_summary['all_required_sync_ready']}")
@@ -27415,6 +27781,20 @@ def cmd_project_status(args: argparse.Namespace) -> int:
             )
         if item.get("suggested_command"):
             print(f"attention_suggested_command={item['suggested_command']}")
+    maintainer_items = (
+        payload.get("maintainer_attention_items", [])
+        if isinstance(payload.get("maintainer_attention_items"), list)
+        else []
+    )
+    print(f"maintainer_attention_count={len(maintainer_items)}")
+    for item in maintainer_items:
+        if not isinstance(item, dict):
+            continue
+        detail = f" audience={item.get('audience')}" if item.get("audience") else ""
+        print(
+            f"maintainer_attention kind={item.get('kind')} severity={item.get('severity')}{detail} "
+            f"message={item.get('message')}"
+        )
     return 0 if payload["ok"] else 1
 
 
@@ -30010,6 +30390,10 @@ def main() -> int:
         return notify_cmd(argv)
     if args.command == "admin-status":
         return cmd_admin_status(args)
+    if args.command == "maintainer-push-guard":
+        return cmd_maintainer_push_guard(args)
+    if args.command == "maintainer-push-guard-install":
+        return cmd_maintainer_push_guard_install(args)
     if args.command == "admin-configure":
         return cmd_admin_configure(args)
     if args.command == "admin-unlock":

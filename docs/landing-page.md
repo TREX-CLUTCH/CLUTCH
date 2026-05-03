@@ -1,9 +1,9 @@
 # Landing Page Deployment
 
 CLUTCH ships a static landing page under `site/index.html`. It is designed to
-explain the system before installation: multi-PC collab, visible monitoring,
-backup and reproducibility, away development, artifact boundaries, and the
-first-use verification path.
+explain the system before installation: top-down project routing, multi-PC
+collab, visible monitoring, backup and reproducibility, away development,
+artifact boundaries, and the first-use verification path.
 
 ## Local Preview
 
@@ -21,11 +21,16 @@ Then open:
 http://127.0.0.1:8080/site/
 ```
 
-The page must load `site/styles.css` and `assets/clutch.png` from the same
-release tree. The smoke also fetches the key linked public docs from the page:
-Prompt Cookbook, First-Use Acceptance Runbook, Verification Matrix, and FAQ.
-It must not depend on external scripts, private lab URLs, private machine names,
-private IP addresses, or credentials.
+The page must load `site/styles.css`, `assets/clutch.png`,
+`assets/clutchmainimage.png`, and
+`assets/clutch-ecosystem-architecture.svg` from the same release tree. The
+architecture graphic should show project binding, session entry, collab
+transport, local snapshots, backups, task alarms, away development, agent PCs,
+and local AI/robot/sensor resources without private lab details. The smoke also
+fetches the key linked public docs from the page: Prompt Cookbook, First-Use
+Acceptance Runbook, Verification Matrix, and FAQ. It must not depend on external
+scripts, private lab URLs, private machine names, private IP addresses, or
+credentials.
 
 The visual policy is intentionally strict: the hero H1 is the only landing page
 text that uses the sans-serif face. Every other heading, control, caption, and
@@ -57,6 +62,8 @@ Before treating the page as publishable:
 - confirm `site/index.html` links to the intended public GitHub repository;
 - confirm the landing smoke fetches the key linked public docs;
 - confirm `assets/clutch.png` is present and visually appropriate;
+- confirm `assets/clutchmainimage.png` is present and renders inside
+  `assets/clutch-ecosystem-architecture.svg`;
 - confirm only the hero H1 uses the sans-serif face, while all other text uses
   the serif face;
 - confirm the page explains clean first run, local smoke checks, and artifact

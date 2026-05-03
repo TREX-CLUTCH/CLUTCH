@@ -142,7 +142,7 @@
       "source": "distribution/tools/clutch_public_verify.py"
     }
   ],
-  "created_at_local": "2026-05-03T15:01:03+0900",
+  "created_at_local": "2026-05-03T21:22:49+0900",
   "manifest": "distribution/export_manifest.json",
   "public_text_replacements": {
     "changed_file_count": 2,
@@ -158,6 +158,6 @@
     "public_conversion_requires_operator_approval": true,
     "scanner_required": true
   },
-  "source_head_short": "39783eb",
+  "source_head_short": "79fd07c",
   "status": "draft"
 }

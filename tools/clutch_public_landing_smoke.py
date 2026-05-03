@@ -16,6 +16,7 @@ from typing import Any
 
 
 PNG_HEADER = b"\x89PNG\r\n\x1a\n"
+SVG_MARKER = b"<svg"
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -97,6 +98,8 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
         "site/index.html": f"{base_url}/site/",
         "site/styles.css": f"{base_url}/site/styles.css",
         "assets/clutch.png": f"{base_url}/assets/clutch.png",
+        "assets/clutchmainimage.png": f"{base_url}/assets/clutchmainimage.png",
+        "assets/clutch-ecosystem-architecture.svg": f"{base_url}/assets/clutch-ecosystem-architecture.svg",
         "docs/prompt-cookbook.md": f"{base_url}/docs/prompt-cookbook.md",
         "docs/first-use-acceptance.md": f"{base_url}/docs/first-use-acceptance.md",
         "docs/verification-matrix.md": f"{base_url}/docs/verification-matrix.md",
@@ -145,6 +148,9 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
                         "https://github.com/TREX-CLUTCH/CLUTCH",
                         "styles.css",
                         "../assets/clutch.png",
+                        "../assets/clutch-ecosystem-architecture.svg",
+                        "Projects enter CLUTCH before they reach agent PCs.",
+                        "CLUTCH top-down ecosystem architecture",
                         "Inspect CLUTCH before you depend on it.",
                     ),
                 )
@@ -158,6 +164,7 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
                         "font-family: var(--font-serif)",
                         ".hero h1",
                         "font-family: var(--font-sans)",
+                        ".architecture-figure",
                     ),
                 )
             elif path.endswith(".png"):
@@ -173,6 +180,21 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
                         path,
                         f"expected {expected_type}, got {result['content_type']}",
                     )
+            elif path.endswith(".svg"):
+                text = body.decode("utf-8", errors="replace")
+                if SVG_MARKER not in body[:200]:
+                    add_finding(findings, "invalid_svg_asset", path, "architecture SVG did not start with an SVG marker")
+                check_text(
+                    findings=findings,
+                    path=path,
+                    text=text,
+                    needles=(
+                        "CLUTCH top-down ecosystem architecture",
+                        "clutchmainimage.png",
+                        "Collab Transport",
+                        "Agent PC 1",
+                    ),
+                )
             elif path.endswith(".md"):
                 text = body.decode("utf-8", errors="replace")
                 check_text(

@@ -40,6 +40,18 @@ the [official CLUTCH landing page](https://trex-clutch.github.io/CLUTCH/)
 or the [static source](site/index.html). For copy-ready operating examples, use
 the [Prompt Cookbook](docs/prompt-cookbook.md).
 
+## Architecture Overview
+
+CLUTCH sits between long-lived project contexts and the PCs that actually run
+Codex sessions, compute jobs, robot interfaces, local sensors, backups, and
+snapshot evidence. One project can be active, another can remain bound for
+later, and unbound projects stay outside the current session route until the
+operator enters or attaches them.
+
+<p align="center">
+  <img src="assets/clutch-ecosystem-architecture.svg" alt="CLUTCH top-down ecosystem architecture showing project binding, session entry, collab transport, agent PCs, local snapshots, backups, away development, task alarms, and local AI, robot, and sensor resources" width="900">
+</p>
+
 ## 10-Minute First Use Path
 
 After install, a new user should be able to prove the core loop without any

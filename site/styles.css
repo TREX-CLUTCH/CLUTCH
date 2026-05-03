@@ -210,6 +210,21 @@ h2 {
   font-size: 1.08rem;
 }
 
+.architecture-figure {
+  margin: 36px 0 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 18px;
+  box-shadow: 0 14px 36px rgba(23, 22, 20, 0.06);
+}
+
+.architecture-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .text-link-row {
   margin: 22px 0 0;
 }

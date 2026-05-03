@@ -21,6 +21,7 @@
       <nav class="nav" aria-label="Primary navigation">
         <a class="brand" href="#top">CLUTCH</a>
         <div class="nav-links">
+          <a href="#architecture">Architecture</a>
           <a href="#features">Features</a>
           <a href="#workflow">Workflow</a>
           <a href="#tutorial">Tutorial</a>
@@ -64,6 +65,25 @@
             project state, collab context, backups, and recovery evidence visible
             to the operator.
           </p>
+        </div>
+      </section>
+
+      <section class="section architecture" id="architecture" aria-labelledby="architecture-title">
+        <div class="section-inner">
+          <p class="section-label">Architecture</p>
+          <h2 id="architecture-title">Projects enter CLUTCH before they reach agent PCs.</h2>
+          <p class="section-note">
+            CLUTCH routes the active project through session entry, visible
+            collab transport, local snapshots, project backups, task alarms,
+            and machine-local resources without forcing private hardware,
+            datasets, or credentials into the public package.
+          </p>
+          <figure class="architecture-figure">
+            <img
+              src="../assets/clutch-ecosystem-architecture.svg"
+              alt="CLUTCH top-down ecosystem architecture showing project binding, session entry, collab transport, agent PCs, local snapshots, backups, away development, task alarms, and local AI, robot, and sensor resources"
+            >
+          </figure>
         </div>
       </section>
 

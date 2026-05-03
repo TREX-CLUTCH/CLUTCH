@@ -1931,6 +1931,7 @@ def build_project_status_summary_blocks(payload: dict[str, Any]) -> list[dict[st
     bindings = payload.get("bindings") if isinstance(payload.get("bindings"), dict) else {}
     collab = payload.get("collab_readiness") if isinstance(payload.get("collab_readiness"), dict) else {}
     integration = payload.get("integration_profile") if isinstance(payload.get("integration_profile"), dict) else {}
+    readiness_profile = str(payload.get("readiness_profile") or "collaborative")
     versioning = payload.get("versioning_readiness") if isinstance(payload.get("versioning_readiness"), dict) else {}
     data_handling = payload.get("data_handling") if isinstance(payload.get("data_handling"), dict) else {}
     authority = versioning.get("version_authority") if isinstance(versioning.get("version_authority"), dict) else {}
@@ -1963,6 +1964,7 @@ def build_project_status_summary_blocks(payload: dict[str, Any]) -> list[dict[st
             metrics=[
                 ui_metric("Project", payload.get("project_id", "-"), label_ko="프로젝트"),
                 ui_metric("Integration", f"{integration.get('mode', '-')}/{integration.get('status', '-')}", label_ko="통합"),
+                ui_metric("Readiness", readiness_profile, label_ko="Readiness"),
                 ui_metric("Publisher", bool_word(publisher.get("is_online_publisher")), label_ko="Publisher"),
                 ui_metric("Code source", authority.get("code_source_of_truth", "-"), label_ko="코드 기준"),
                 ui_metric("Repro source", authority.get("reproducibility_boundary", versioning.get("reproducibility_source", "-")), label_ko="재현 기준"),
@@ -1977,6 +1979,7 @@ def build_project_status_summary_blocks(payload: dict[str, Any]) -> list[dict[st
                 ui_metric("Main/Sub", f"{bindings.get('project_main_count', bindings.get('main_count', 0))}/{bindings.get('project_worker_count', bindings.get('worker_count', 0))}", label_ko="Main/Sub"),
                 ui_metric("Collab", str(collab.get("status") or "-"), label_ko="Collab"),
                 ui_metric("Attention", payload.get("attention_count", counts.get("total_count", 0)), label_ko="주의 항목", tone=tone),
+                ui_metric("Maintainer advisories", payload.get("maintainer_attention_count", 0), label_ko="Maintainer advisory", tone="info"),
             ],
         )
     ]
@@ -2058,6 +2061,19 @@ def build_project_status_summary_blocks(payload: dict[str, Any]) -> list[dict[st
     finding_rows = rows_from_findings(payload.get("attention_items"))
     if finding_rows:
         blocks.append(ui_block("findings", "Findings", "Project-specific issues reported by CLUTCH.", title_ko="점검 항목", summary_ko="CLUTCH가 보고한 프로젝트별 이슈입니다.", tone=tone, rows=finding_rows))
+    maintainer_rows = rows_from_findings(payload.get("maintainer_attention_items"))
+    if maintainer_rows:
+        blocks.append(
+            ui_block(
+                "records",
+                "Maintainer advisories",
+                "Advanced CLUTCH maintenance items hidden from normal researcher-facing attention.",
+                title_ko="Maintainer advisory",
+                summary_ko="일반 연구자 주의항목에서는 숨긴 CLUTCH 유지보수용 고급 항목입니다.",
+                tone="info",
+                rows=maintainer_rows,
+            )
+        )
     action_rows = rows_from_next_actions(payload.get("next_actions"))
     action_rows.extend(rows_from_next_actions(data_handling.get("next_actions"), limit=4))
     if action_rows:
