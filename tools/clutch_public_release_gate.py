@@ -540,10 +540,11 @@ REQUIRED_TEXT = {
         "docs/faq.md",
         "CLUTCH for Research Agents",
         "CLUTCH top-down ecosystem architecture",
-        "clutchmainimage.png",
+        "data:image/png;base64,",
         "https://github.com/TREX-CLUTCH/CLUTCH",
         "PNG_HEADER",
         "SVG_MARKER",
+        "external_nested_logo_reference",
     ),
     "tools/clutch_public_web_smoke.py": (
         "clutch.public_web_smoke.v1",

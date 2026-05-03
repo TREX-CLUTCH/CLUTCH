@@ -190,11 +190,18 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
                     text=text,
                     needles=(
                         "CLUTCH top-down ecosystem architecture",
-                        "clutchmainimage.png",
+                        "data:image/png;base64,",
                         "Collab Transport",
                         "Agent PC 1",
                     ),
                 )
+                if 'href="clutchmainimage.png"' in text:
+                    add_finding(
+                        findings,
+                        "external_nested_logo_reference",
+                        path,
+                        "architecture SVG must embed the center logo so it renders when loaded through an HTML img tag",
+                    )
             elif path.endswith(".md"):
                 text = body.decode("utf-8", errors="replace")
                 check_text(
