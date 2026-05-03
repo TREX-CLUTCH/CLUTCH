@@ -45,7 +45,7 @@ jobs:
           cp site/styles.css .pages-build/styles.css
           cp -R assets .pages-build/assets
           cp -R docs .pages-build/docs
-          perl -0pi -e 's#\\.\\./assets/#assets/#g; s#\\.\\./docs/#docs/#g' .pages-build/index.html
+          perl -0pi -e 's#\.\./assets/#assets/#g; s#\.\./docs/#docs/#g' .pages-build/index.html
 
       - name: Upload landing page artifact
         uses: actions/upload-pages-artifact@v3
