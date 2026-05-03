@@ -1,0 +1,8 @@
+{
+  "schema": "clutch.services.example.v1",
+  "services": {},
+  "notes": [
+    "Public CLUTCH does not ship with real service definitions.",
+    "Users may add local service checks after installation."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "schema": "clutch.hardware.example.v1",
+  "hardware": [],
+  "notes": [
+    "Public CLUTCH does not ship with real hardware registry entries.",
+    "Users may add their own local hardware registry after installation."
+  ]
+}

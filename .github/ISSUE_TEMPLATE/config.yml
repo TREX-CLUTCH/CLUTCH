@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security boundary
+    url: https://github.com/TREX-CLUTCH/clutch-public/security/policy
+    about: Do not post secrets, private endpoints, or exploit details in public issues.

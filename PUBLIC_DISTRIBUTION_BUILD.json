@@ -1,0 +1,158 @@
+{
+  "copied_item_count": 27,
+  "copied_items": [
+    {
+      "destination": "README.md",
+      "kind": "file",
+      "source": "distribution/README.md"
+    },
+    {
+      "destination": "Makefile",
+      "kind": "file",
+      "source": "distribution/Makefile"
+    },
+    {
+      "destination": ".gitignore",
+      "kind": "file",
+      "source": "distribution/.gitignore"
+    },
+    {
+      "destination": "LICENSE",
+      "kind": "file",
+      "source": "distribution/LICENSE"
+    },
+    {
+      "destination": "CONTRIBUTING.md",
+      "kind": "file",
+      "source": "distribution/CONTRIBUTING.md"
+    },
+    {
+      "destination": ".github",
+      "kind": "directory",
+      "source": "distribution/.github"
+    },
+    {
+      "destination": "assets",
+      "kind": "directory",
+      "source": "distribution/assets"
+    },
+    {
+      "destination": "site",
+      "kind": "directory",
+      "source": "distribution/site"
+    },
+    {
+      "destination": "SECURITY.md",
+      "kind": "file",
+      "source": "distribution/SECURITY.md"
+    },
+    {
+      "destination": "docs",
+      "kind": "directory",
+      "source": "distribution/docs"
+    },
+    {
+      "destination": "docs/FIRST_RUN_WIZARD.md",
+      "kind": "file",
+      "source": "distribution/FIRST_RUN_WIZARD.md"
+    },
+    {
+      "destination": "templates",
+      "kind": "directory",
+      "source": "distribution/templates"
+    },
+    {
+      "destination": "installer",
+      "kind": "directory",
+      "source": "distribution/installer"
+    },
+    {
+      "destination": "registry",
+      "kind": "directory",
+      "source": "distribution/default_registry"
+    },
+    {
+      "destination": "collab_transport",
+      "kind": "directory",
+      "source": "distribution/collab_transport"
+    },
+    {
+      "destination": "scripts/clutch_ctl.py",
+      "kind": "file",
+      "source": "scripts/clutch_ctl.py"
+    },
+    {
+      "destination": "scripts/clutch_web.py",
+      "kind": "file",
+      "source": "scripts/clutch_web.py"
+    },
+    {
+      "destination": "scripts/project_reentry_common.py",
+      "kind": "file",
+      "source": "scripts/project_reentry_common.py"
+    },
+    {
+      "destination": "modules/web/static",
+      "kind": "directory",
+      "source": "modules/web/static"
+    },
+    {
+      "destination": "modules/notify",
+      "kind": "directory",
+      "source": "modules/notify"
+    },
+    {
+      "destination": "tools/clutch_distribution_scan.py",
+      "kind": "file",
+      "source": "scripts/clutch_distribution_scan.py"
+    },
+    {
+      "destination": "tools/clutch_public_release_gate.py",
+      "kind": "file",
+      "source": "distribution/tools/clutch_public_release_gate.py"
+    },
+    {
+      "destination": "tools/clutch_public_landing_smoke.py",
+      "kind": "file",
+      "source": "distribution/tools/clutch_public_landing_smoke.py"
+    },
+    {
+      "destination": "tools/clutch_public_collab_smoke.py",
+      "kind": "file",
+      "source": "distribution/tools/clutch_public_collab_smoke.py"
+    },
+    {
+      "destination": "tools/clutch_public_install_smoke.py",
+      "kind": "file",
+      "source": "distribution/tools/clutch_public_install_smoke.py"
+    },
+    {
+      "destination": "tools/clutch_public_visibility_review.py",
+      "kind": "file",
+      "source": "distribution/tools/clutch_public_visibility_review.py"
+    },
+    {
+      "destination": "tools/clutch_public_verify.py",
+      "kind": "file",
+      "source": "distribution/tools/clutch_public_verify.py"
+    }
+  ],
+  "created_at_local": "2026-05-03T10:53:38+0900",
+  "manifest": "distribution/export_manifest.json",
+  "public_text_replacements": {
+    "changed_file_count": 2,
+    "changed_files": [
+      "modules/notify/clutch_notify_ctl.py",
+      "scripts/clutch_ctl.py"
+    ],
+    "replacement_count": 58
+  },
+  "schema": "clutch.public_distribution_build.v1",
+  "security_boundary": {
+    "private_repo_first": true,
+    "public_conversion_requires_operator_approval": true,
+    "scanner_required": true
+  },
+  "source_head_short": "a8bd6fa",
+  "status": "draft"
+}

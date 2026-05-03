@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CLUTCH Console</title>
+    <link rel="stylesheet" href="/assets/styles.css?v=__CLUTCH_ASSET_VERSION__" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">
+            <img src="/assets/clutch-mark.png" alt="CLUTCH mark" />
+          </div>
+          <div>
+            <div class="brand-name">CLUTCH</div>
+            <div class="brand-subtitle" data-i18n="brand.subtitle">Operator Console</div>
+          </div>
+        </div>
+        <nav class="nav" aria-label="Console sections">
+          <button class="nav-item active" type="button" data-view="dashboard" data-i18n="nav.dashboard">Dashboard</button>
+          <button class="nav-item" type="button" data-view="sessions" data-i18n="nav.sessions">Sessions</button>
+          <button class="nav-item" type="button" data-view="monitor" data-i18n="nav.monitor">Monitor</button>
+          <button class="nav-item" type="button" data-view="projects" data-i18n="nav.projects">Projects</button>
+          <button class="nav-item" type="button" data-view="backups" data-i18n="nav.backups">Backups</button>
+          <button class="nav-item" type="button" data-view="machines" data-i18n="nav.machines">Machines</button>
+          <button class="nav-item" type="button" data-view="commands" data-i18n="nav.commands">Commands</button>
+          <button class="nav-item" type="button" data-view="help" data-i18n="nav.help">Help</button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="small-label" data-i18n="label.machine">Machine</div>
+          <div id="sidebarMachine" class="sidebar-value">-</div>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <div>
+            <div class="small-label" data-i18n="topbar.kicker">Local-first control plane</div>
+            <h1 id="pageTitle">Dashboard</h1>
+          </div>
+          <div class="topbar-actions">
+            <div class="language-switch" role="group" aria-label="Language">
+              <button class="language-button" type="button" data-lang="en">EN</button>
+              <button class="language-button" type="button" data-lang="ko">한글</button>
+            </div>
+            <select id="projectSelect" class="select" aria-label="Project"></select>
+            <button id="refreshButton" class="button primary" type="button" data-i18n="action.refresh">Refresh</button>
+            <div id="statusBadge" class="pill neutral">Loading</div>
+          </div>
+        </header>
+
+        <main>
+          <section id="dashboardView" class="view active" data-view-panel="dashboard">
+            <div class="summary-grid">
+              <article class="summary-card">
+                <div class="small-label" data-i18n="label.machine">Machine</div>
+                <strong id="machineTitle">-</strong>
+                <span id="threadTitle">-</span>
+              </article>
+              <article class="summary-card">
+                <div class="small-label" data-i18n="label.projects">Projects</div>
+                <strong id="projectSummary">-</strong>
+                <span id="projectSummaryDetail">-</span>
+              </article>
+              <article class="summary-card">
+                <div class="small-label" data-i18n="label.workers">Workers</div>
+                <strong id="workerSummary">-</strong>
+                <span id="workerSummaryDetail">-</span>
+              </article>
+              <article class="summary-card">
+                <div class="small-label" data-i18n="label.attention">Attention</div>
+                <strong id="attentionSummary">-</strong>
+                <span id="attentionSummaryDetail">-</span>
+              </article>
+            </div>
+
+            <section class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.attention">Attention</div>
+                  <h2 data-i18n="heading.attentionNextSteps">Attention Next Steps</h2>
+                </div>
+                <div id="attentionWorkflowBadge" class="pill neutral">-</div>
+              </div>
+              <div id="attentionWorkflowList" class="attention-list"></div>
+            </section>
+
+            <div class="section-grid two">
+              <section class="section">
+                <div class="section-heading">
+                  <div>
+                    <div class="small-label" data-i18n="label.projects">Projects</div>
+                    <h2 data-i18n="heading.operationalState">Operational State</h2>
+                  </div>
+                </div>
+                <div id="projectsList" class="card-list"></div>
+              </section>
+
+              <section class="section">
+                <div class="section-heading">
+                  <div>
+                    <div class="small-label" data-i18n="label.workers">Workers</div>
+                    <h2 data-i18n="heading.peerFreshness">Worker Links</h2>
+                  </div>
+                </div>
+                <div id="workersList" class="card-list"></div>
+              </section>
+            </div>
+
+            <section class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.consistency">Consistency</div>
+                  <h2 data-i18n="heading.displayAudit">Display Audit</h2>
+                </div>
+                <div id="auditSummary" class="pill neutral">-</div>
+              </div>
+              <div id="auditList" class="audit-list"></div>
+            </section>
+          </section>
+
+          <section id="sessionsView" class="view" data-view-panel="sessions">
+            <div class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.sessions">Sessions</div>
+                  <h2 data-i18n="heading.projectPcRoles">Project PC Roles</h2>
+                </div>
+                <div id="bindingSummary" class="pill neutral">-</div>
+              </div>
+              <div id="sessionsList" class="session-grid"></div>
+            </div>
+          </section>
+
+          <section id="monitorView" class="view" data-view-panel="monitor">
+            <div class="section monitor-console">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.collab">Collab</div>
+                  <h2 data-i18n="heading.collabMonitor">Collab Monitor</h2>
+                </div>
+                <div id="monitorBadge" class="pill neutral">-</div>
+              </div>
+              <div id="monitorSummary" class="monitor-summary-grid"></div>
+            </div>
+
+            <section class="section monitor-guidance">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.guidance">Guidance</div>
+                  <h2 data-i18n="heading.monitorGuidance">Monitor Guidance</h2>
+                </div>
+                <div id="monitorGuidanceBadge" class="pill neutral">-</div>
+              </div>
+              <div id="monitorGuidanceList" class="monitor-guidance-list"></div>
+            </section>
+
+            <div class="section-grid two">
+              <section class="section">
+                <div class="section-heading">
+                  <div>
+                    <div class="small-label" data-i18n="label.pcRoles">PC Roles</div>
+                    <h2 data-i18n="heading.monitorHosts">Monitor Hosts</h2>
+                  </div>
+                  <div id="monitorHostBadge" class="pill neutral">-</div>
+                </div>
+                <div id="monitorHostList" class="monitor-host-list"></div>
+              </section>
+
+              <section class="section">
+                <div class="section-heading">
+                  <div>
+                    <div class="small-label" data-i18n="label.latest">Latest</div>
+                    <h2 data-i18n="heading.monitorTaskContext">Task Context</h2>
+                  </div>
+                  <div id="monitorTaskBadge" class="pill neutral">-</div>
+                </div>
+                <div id="monitorTaskList" class="monitor-task-list"></div>
+              </section>
+            </div>
+
+            <section class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.workers">Workers</div>
+                  <h2 data-i18n="heading.monitorWorkerLinks">Worker Links</h2>
+                </div>
+                <div id="monitorWorkerBadge" class="pill neutral">-</div>
+              </div>
+              <div id="monitorWorkerList" class="card-list"></div>
+            </section>
+          </section>
+
+          <section id="projectsView" class="view" data-view-panel="projects">
+            <div class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.selectedProject">Selected Project</div>
+                  <h2 id="selectedProjectTitle">-</h2>
+                </div>
+                <div id="selectedProjectBadge" class="pill neutral">-</div>
+              </div>
+              <div id="projectDetail" class="detail-grid"></div>
+            </div>
+          </section>
+
+          <section id="backupsView" class="view" data-view-panel="backups">
+            <div class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.backups">Backups</div>
+                  <h2 data-i18n="heading.snapshotsMetadata">Snapshots / Metadata</h2>
+                </div>
+                <div id="backupsSummaryBadge" class="pill neutral">-</div>
+              </div>
+              <div id="backupProjectList" class="card-list"></div>
+            </div>
+          </section>
+
+          <section id="machinesView" class="view" data-view-panel="machines">
+            <div class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.machine">Machine</div>
+                  <h2 id="machineViewTitle">-</h2>
+                </div>
+                <div id="machineViewBadge" class="pill neutral">-</div>
+              </div>
+              <div id="machineLifecycleGrid" class="detail-grid"></div>
+            </div>
+
+            <div class="section-grid two">
+              <section class="section">
+                <div class="section-heading">
+                  <div>
+                    <div class="small-label" data-i18n="label.workers">Workers</div>
+                    <h2 data-i18n="heading.codexPeers">Codex Peers</h2>
+                  </div>
+                  <div id="machineWorkersBadge" class="pill neutral">-</div>
+                </div>
+                <div id="machineWorkersList" class="card-list"></div>
+              </section>
+
+              <section class="section">
+                <div class="section-heading">
+                  <div>
+                    <div class="small-label" data-i18n="label.repos">Repos</div>
+                    <h2 data-i18n="heading.foundationOps">Foundation / Ops</h2>
+                  </div>
+                  <div id="machineReposBadge" class="pill neutral">-</div>
+                </div>
+                <div id="machineRepoList" class="card-list"></div>
+              </section>
+            </div>
+          </section>
+
+          <section id="commandsView" class="view" data-view-panel="commands">
+            <div class="section">
+              <div class="section-heading">
+                <div>
+                  <div class="small-label" data-i18n="label.console">Console</div>
+                  <h2 data-i18n="heading.commandConsole">Command Console</h2>
+                </div>
+                <div id="commandState" class="pill neutral">Idle</div>
+              </div>
+              <div class="command-layout">
+                <div class="command-groups">
+                  <div class="command-context">
+                    <div class="context-row">
+                      <div class="title-stack">
+                        <div class="small-label" data-i18n="label.selectedProject">Selected Project</div>
+                        <strong id="commandProjectName">-</strong>
+                        <span id="commandProjectMeta" class="subtle">-</span>
+                      </div>
+                      <div id="commandProjectBadge" class="pill neutral">-</div>
+                    </div>
+                    <div class="command-scope-row">
+                      <span class="command-scope" data-i18n="command.scope.systemDiagnostics">System diagnostics</span>
+                      <span class="command-scope" data-i18n="command.scope.projectDiagnostics">Project diagnostics</span>
+                      <span class="command-scope" data-i18n="command.scope.previewOnly">Preview only</span>
+                      <span class="command-scope" data-i18n="command.scope.collabOnboarding">Collab onboarding</span>
+                      <span class="command-scope" data-i18n="command.scope.projectActions">State-changing project actions</span>
+                    </div>
+                    <div id="commandRegistryMeta" class="subtle">-</div>
+                    <div class="command-option-row">
+                      <label>
+                        <span data-i18n="label.newMachine">New Machine</span>
+                        <input id="newMachineInput" class="input" type="text" value="future-pc-01" autocomplete="off" spellcheck="false" />
+                      </label>
+                      <label>
+                        <span data-i18n="label.connectionMode">Connection Mode</span>
+                        <select id="connectionModeSelect" class="select compact">
+                          <option value="auto">auto</option>
+                          <option value="lan">lan</option>
+                          <option value="online">online</option>
+                        </select>
+                      </label>
+                    </div>
+                  </div>
+                  <div id="defaultCommandGroup" class="command-group" data-command-group="default">
+                    <div class="command-group-title">
+                      <div class="small-label">Console</div>
+                      <strong>Core Workflows</strong>
+                    </div>
+                  </div>
+                  <details class="command-advanced">
+                    <summary data-i18n="command.advanced.summary">Show advanced features</summary>
+                    <div class="command-group" data-command-group="advanced-system">
+                      <div class="command-group-title">
+                        <div class="small-label">System</div>
+                        <strong>Advanced Diagnostics</strong>
+                      </div>
+                    </div>
+                    <div class="command-group" data-command-group="advanced-project">
+                      <div class="command-group-title">
+                        <div class="small-label">Project</div>
+                        <strong>Selected Project</strong>
+                      </div>
+                    </div>
+                    <div class="command-group" data-command-group="advanced-collab">
+                      <div class="command-group-title">
+                        <div class="small-label">Collab</div>
+                        <strong>Collab / Onboarding</strong>
+                      </div>
+                    </div>
+                    <div class="command-group" data-command-group="advanced-project-actions">
+                      <div class="command-group-title">
+                        <div class="small-label">Project</div>
+                        <strong>Project Actions</strong>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+                <div class="log-frame">
+                  <div class="log-header">
+                    <div>
+                      <div class="small-label" data-i18n="label.output">Output</div>
+                      <strong id="commandMeta">No command selected.</strong>
+                    </div>
+                    <div id="commandScope" class="pill neutral">-</div>
+                  </div>
+                  <div id="commandLog" class="command-output"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="helpView" class="view" data-view-panel="help">
+            <div class="help-hero">
+              <img src="/assets/clutch-representative.png" alt="CLUTCH representative mark" />
+              <div>
+                <div class="small-label">Help</div>
+                <h2>CLUTCH Operating Protocol</h2>
+                <p>
+                  CLUTCH is a local-first operating layer for Codex sessions,
+                  projects, PCs, repositories, backups, snapshots, and
+                  multi-PC collaboration. This Help page is not a feature list.
+                  It explains the order of operations, what to ask the active
+                  Codex session to do, and which actions require explicit
+                  operator approval.
+                </p>
+                <p>
+                  CLUTCH is built for AI and robotics labs where compute
+                  resources, large models or datasets, hardware-adjacent
+                  approval boundaries, and multi-PC work often overlap.
+                </p>
+              </div>
+            </div>
+
+            <div class="help-layout">
+              <section class="help-section">
+                <div class="small-label">Why CLUTCH</div>
+                <h2>Core Differentiators</h2>
+                <div class="help-grid">
+                  <article class="help-card">
+                    <h3>Multi-PC Codex Collab</h3>
+                    <p>
+                      CLUTCH does more than manage one local Codex session.
+                      It binds Codex sessions across multiple PCs by project,
+                      role, and machine-local path. Main, worker, observer,
+                      heartbeat, task, acknowledgement, result, and file
+                      handoff evidence are kept in the same project context.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Visible Collab Monitor</h3>
+                    <p>
+                      Collaboration should be visible while it is happening.
+                      The monitor shows whether the worker is fresh, which
+                      project task it is looking at, and whether transport
+                      roles agree with CLUTCH project bindings.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Large Project Snapshots</h3>
+                    <p>
+                      Large model weights, datasets, robot bags, media, and
+                      checkpoints should not be forced into git. CLUTCH keeps
+                      source heads, paths, URIs, hashes, artifact pointers, and
+                      validation commands together so a project can be restored.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Away Development</h3>
+                    <p>
+                      Away work is bounded work, not open-ended automation.
+                      A plan records the objective, allowed scope, stop
+                      conditions, verification, and expiry. Work outside the
+                      plan must stop and ask.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Web UI and Notifications</h3>
+                    <p>
+                      The Web UI turns raw CLUTCH state into operator-readable
+                      status. Notifications bring the operator back when long
+                      work needs attention. Routine work should still be issued
+                      as natural language to the active Codex session.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Research Lab Ready</h3>
+                    <p>
+                      CLUTCH is aimed at research groups that split work across
+                      several workstations, keep large artifacts outside git,
+                      and need a clear boundary around hardware-adjacent work.
+                    </p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">First run</div>
+                <h2>First Install and Web Startup</h2>
+                <p>
+                  The public first-run wizard creates local settings for this
+                  PC only: machine id, project workspace root, artifact store,
+                  GitHub setup preference, collab preference, admin guard, and
+                  Web console preference. It ships with no preset accounts, IP
+                  addresses, SSH aliases, tokens, or lab paths.
+                </p>
+                <ol class="help-steps">
+                  <li>Run the first-run wizard once to create this PC's local CLUTCH setup.</li>
+                  <li>Start each new Codex session with `session-entry`. When enabled, this starts the Web console backend.</li>
+                  <li>Local desktop sessions may open a browser safely. SSH or headless sessions should print the URL instead.</li>
+                  <li>GitHub sync uses your own account and remotes only after you configure them.</li>
+                  <li>Collab setup can guide wired-LAN, SSH, Codex exec, or shared-folder transports, but peer addresses and credentials stay local.</li>
+                  <li>After first setup, the dashboard and Help should explain the next action instead of repeatedly asking setup questions.</li>
+                </ol>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">Operating protocol</div>
+                <h2>Operating Protocol</h2>
+                <p>
+                  Start by checking which project and role this Codex session
+                  is attached to. Then read the Dashboard and Monitor. Normal
+                  development instructions should go to the active Codex
+                  session in natural language, not to a growing set of Web
+                  buttons.
+                </p>
+                <ol class="help-steps">
+                  <li>Run `session-entry` to inspect project matching, re-entry docs, sync state, and attach guidance.</li>
+                  <li>When role matters, attach explicitly with `session-attach --project ... --bind-role main|worker|observer`.</li>
+                  <li>Use Sessions to verify active bindings. For projects with `machine_role_policy=none`, active binding is the role source.</li>
+                  <li>Read Dashboard warnings as review evidence, not automatic failures. Dirty work, publish gates, and stale history mean different things.</li>
+                  <li>Attention items separate inspection from action. `safe_to_run_without_approval=True` means the suggested check is read-only. `approval_required=True` means the actual fix, apply, publish, restore, or lifecycle action still needs approval.</li>
+                  <li>Ask the current Codex session for routine work, complex edits, worker delegation, or away-development planning.</li>
+                  <li>Default commands stay intentionally small: status, refresh preview, preview-only sync/collab checks, monitor status, and recovery evidence.</li>
+                  <li>Before risky edits, handoff, or release, check local backups, snapshots, metadata, validation evidence, and artifact pointers.</li>
+                  <li>Long-term context may live in `PROJECT_HISTORY.md`, git, snapshot metadata, backups, away logs, and durable project docs. The active checkpoint is not the only history.</li>
+                  <li>During collab, the main and worker machines should both have an operator-visible monitor.</li>
+                  <li>Restore, online publication, sudo, service, network, kernel, udev, credential, destructive restore, and hardware actions require explicit approval.</li>
+                </ol>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">Command protocol</div>
+                <h2>Command Principles</h2>
+                <div class="help-grid">
+                  <article class="help-card">
+                    <h3>Codex Session First</h3>
+                    <p>
+                      Give real development instructions to the active Codex
+                      session in natural language. The session should read the
+                      binding, away plan, checkpoint, and approval boundary
+                      before choosing CLI commands.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Default Commands Stay Small</h3>
+                    <p>
+                      Default buttons are limited to checks that are worth
+                      repeating: status, preview, monitor, and backup evidence.
+                      Too many buttons make the console harder to validate and
+                      make approval boundaries easier to misunderstand.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Advanced Commands Are Evidence</h3>
+                    <p>
+                      Advanced commands are low-frequency evidence checks:
+                      lifecycle, snapshot metadata, artifact pointers,
+                      onboarding, and release readiness. Apply and publish
+                      paths still require approval through the Codex session.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Web Buttons Are Not Delegation</h3>
+                    <p>
+                      Web buttons run registered CLUTCH CLI or API checks and
+                      show evidence. A button does not send arbitrary natural
+                      language work to another PC or command a worker session.
+                      Ask the active Codex session to delegate.
+                    </p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">Read the console</div>
+                <h2>Reading The Console</h2>
+                <div class="help-grid">
+                  <article class="help-card">
+                    <h3>Dashboard</h3>
+                    <p>
+                      Start here for project and machine status. A warning is
+                      evidence that needs review, not always a failure. For
+                      example, dirty work may be recoverable while still
+                      blocking clean publication.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Attention Boundary</h3>
+                    <p>
+                      Attention items show an operator summary, suggested
+                      command, safe-to-run state, and approval-required state.
+                      Read-only checks can run immediately. Sync, apply,
+                      publish, restore, and lifecycle changes need approval.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Sessions</h3>
+                    <p>
+                      Read project roles by PC: main, worker, and observer.
+                      Expired or released bindings are history, not current
+                      authority.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Monitor</h3>
+                    <p>
+                      The visible collab monitor shows whether main and worker
+                      monitors are present, whether heartbeat is fresh, and
+                      which project owns recent task, ack, and result records.
+                      Stale task history from another project is useful context,
+                      not active selected-project work.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Projects</h3>
+                    <p>
+                      Inspect repo sync, versioning readiness, backups, away
+                      plan, data handling, and online policy for the selected
+                      project. CLUTCH binding is the project role source;
+                      transport role is runtime diagnostic state.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Backups</h3>
+                    <p>
+                      Compare local backups, local manifests, promoted metadata
+                      refs, and restore readiness. Recovery readiness and clean
+                      release readiness are related but different judgements.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Machines</h3>
+                    <p>
+                      Inspect install state, reconnect state, runtime, online
+                      identity, worker link, target source, and repo alignment
+                      for this PC. Lifecycle readiness is not robot safety
+                      certification.
+                    </p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">Collab</div>
+                <h2>Collab Standard</h2>
+                <p>
+                  CLUTCH collab uses active project bindings on each PC as the
+                  main and worker role source. Collab transport carries tasks,
+                  heartbeat, and evidence. Transport role does not replace the
+                  CLUTCH project binding.
+                </p>
+                <ol class="help-steps">
+                  <li>The main session keeps project direction, approval boundary, and checkpoint context.</li>
+                  <li>The worker performs bounded work in its own machine-local workspace.</li>
+                  <li>The monitor should show local role, peer role, CLUTCH binding, transport role, target source, task, acknowledgement, result, and heartbeat.</li>
+                  <li>If role mismatch or binding-role-only state appears, ask the Codex session to interpret the role state before delegating.</li>
+                  <li>Complex delegation should be requested in natural language through the active Codex session, not through a generic Web button.</li>
+                </ol>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">Data and release</div>
+                <h2>Data, Backups, and Release</h2>
+                <div class="help-grid">
+                  <article class="help-card">
+                    <h3>Project Data Policy</h3>
+                    <p>
+                      Data policy is project-specific. A small project may fit
+                      entirely in git and local backups. Model or training work
+                      usually keeps code and configs in git while checkpoints,
+                      datasets, raw logs, and Hugging Face caches stay in local
+                      or external artifact storage with paths, URIs, or hashes.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Backup / Snapshot</h3>
+                    <p>
+                      A backup is a local recovery bundle. A snapshot is
+                      reproducibility metadata for a point in time. Before
+                      release, code head, dirty state, validation command, and
+                      artifact pointers should explain the same state.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>Online Publish</h3>
+                    <p>
+                      Online git is the approved code source of truth when a
+                      project configures it. Publish authority still depends on
+                      project policy and the publisher machine. Dirty work can
+                      block clean publication readiness.
+                    </p>
+                  </article>
+                  <article class="help-card">
+                    <h3>New PC Onboarding</h3>
+                    <p>
+                      New PC onboarding starts with `machine-collab-guide`.
+                      Repeatable onboarding should be tied to a release tag,
+                      release manifest, bootstrap path, machine registration
+                      review, and onboarding checklist.
+                    </p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">Natural language</div>
+                <h2>Common Requests</h2>
+                <div class="help-grid help-guide-grid">
+                  <article class="help-card">
+                    <h3>Enter A New Session</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>I opened a new Codex session. Check the CLUTCH entry state.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`session-entry` reports project match, re-entry docs, attach command, and sync state.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Attach To A Project</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Attach this session to my project as main.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`session-attach` creates the active binding and Sessions shows the main role.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Summarize Status</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Summarize the current project status and attention items in plain language.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-status`, `overview`, and attention plans summarize repos, bindings, backups, next actions, safe-to-run state, and approval-required state.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Refresh Readiness</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Check whether this PC can continue the project, including git sync and metadata.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-refresh --dry-run` previews repo sync, snapshot metadata, versioning readiness, and restore review together.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Inspect Repo Sync</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Inspect only the clone or pull plan for the project repos.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>Advanced `project-sync --dry-run` shows clone, pull, blocked, and dirty states without changing the workspace.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Review Project History</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Show the docs and recovery evidence that explain this project state.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-history` indexes `PROJECT_HISTORY.md`, recent git commits, backups, snapshots, metadata, away logs, and intents.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Create A Backup</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Create a local project backup before this risky change.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`project-backup` records backup id, repo bundle, copied docs, and missing optional files.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Check The Collab Monitor</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Check whether both main and worker collab monitors are visible.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>`collab-monitor-status` separates visible/running state, CLUTCH binding, transport role, and task history.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Prepare Away Work</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Create an away-development plan and continue only inside the approved scope.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>The away plan records objective, allowed scope, stop condition, verification, and expiry.</p></div>
+                  </article>
+                  <article class="help-card">
+                    <h3>Prepare A Release</h3>
+                    <div class="help-example"><strong>Example prompt</strong><p>Check whether the next release is ready against the validation matrix.</p></div>
+                    <div class="help-example result"><strong>Expected result</strong><p>Tests, self-test, web health, `web-console-status`, release zip, SHA256, GitHub release state, and multi-PC version alignment are checked.</p></div>
+                  </article>
+                </div>
+              </section>
+
+              <section class="help-section">
+                <div class="small-label">Safety</div>
+                <h2>Approval and Safety Boundary</h2>
+                <p>
+                  CLUTCH state, worker replies, and monitor heartbeat do not
+                  authorize robot motion, hardware recovery, sudo, network,
+                  kernel, udev, service changes, credential handling,
+                  destructive restore, or online publication. CLUTCH's job is
+                  to expose the right project, machine, session, path, backup,
+                  runbook, and approval boundary.
+                </p>
+              </section>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script src="/assets/app.js?v=__CLUTCH_ASSET_VERSION__"></script>
+  </body>
+</html>

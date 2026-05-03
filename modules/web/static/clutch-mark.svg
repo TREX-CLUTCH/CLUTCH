@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">CLUTCH mark placeholder</title>
+  <desc id="desc">A minimal placeholder mark for the CLUTCH console that can be replaced by the operator's final image.</desc>
+  <rect width="512" height="512" rx="96" fill="#20242a"/>
+  <path d="M336 169c-23-24-52-36-86-36-67 0-121 54-121 121s54 121 121 121c35 0 65-13 88-38" fill="none" stroke="#fffdf9" stroke-width="40" stroke-linecap="round"/>
+  <path d="M281 257h104" fill="none" stroke="#7fb9a5" stroke-width="36" stroke-linecap="round"/>
+  <path d="M333 205l52 52-52 52" fill="none" stroke="#7fb9a5" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

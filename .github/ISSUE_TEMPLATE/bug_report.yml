@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a CLUTCH public distribution bug without private machine data.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include secrets, tokens, private SSH targets, LAN IPs, hostnames,
+        usernames, home paths, hardware profiles, runtime state, backups, or
+        project histories. Use placeholders such as `<machine-a>` and
+        `<project-root>`.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What failed?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Provide sanitized commands or UI steps.
+      placeholder: |
+        1. Install CLUTCH in a clean CLUTCH_HOME.
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation output
+      description: Paste sanitized scanner, release gate, install smoke, or doctor output.
+      render: text
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Public boundary confirmation
+      options:
+        - label: I removed private machine ids, hostnames, usernames, home paths, LAN IPs, SSH aliases, tokens, private remotes, and hardware profiles.
+          required: true

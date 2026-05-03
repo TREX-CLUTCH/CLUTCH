@@ -1,0 +1,14 @@
+{
+  "schema": "clutch.projects.example.v1",
+  "projects": [
+    {
+      "project_id": "example-project",
+      "display_name": "Example Project",
+      "repo_sources": [],
+      "artifact_pointer_policy": {
+        "mode": "audit_when_empty",
+        "notes": "Record large local data as artifact pointers instead of committing it."
+      }
+    }
+  ]
+}

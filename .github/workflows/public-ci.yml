@@ -1,0 +1,34 @@
+name: CLUTCH Public CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  public-release-gate:
+    name: Public release gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run public verification
+        # The wrapper runs clutch_distribution_scan.py,
+        # clutch_public_release_gate.py, clutch_public_visibility_review.py,
+        # clutch_public_landing_smoke.py, clutch_public_collab_smoke.py,
+        # and clutch_public_install_smoke.py.
+        # Direct target for the collab helper: make collab-smoke.
+        # Direct equivalent: python3 tools/clutch_public_verify.py --root . --json
+        run: make verify

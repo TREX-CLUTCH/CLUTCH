@@ -1,0 +1,14 @@
+{
+  "schema": "clutch.machines.example.v1",
+  "machines": [
+    {
+      "machine_id": "example-machine-01",
+      "display_name": "Example Machine",
+      "roles": [],
+      "notes": [
+        "Replace this template during first-run setup.",
+        "Do not commit generated machine-local profiles to a public repo."
+      ]
+    }
+  ]
+}
