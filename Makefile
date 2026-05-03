@@ -14,7 +14,7 @@ help:
 	@printf '%s\n' "  make web-smoke      Run clean first-run Web console smoke."
 	@printf '%s\n' "  make collab-smoke   Run file-based multi-PC collab transport smoke."
 	@printf '%s\n' "  make install-smoke  Run clean install and first-project smoke."
-	@printf '%s\n' "  make serve-landing  Serve site/index.html on 127.0.0.1:$(PORT)."
+	@printf '%s\n' "  make serve-landing  Serve the landing page; open http://127.0.0.1:$(PORT)/site/."
 
 verify:
 	@$(PYTHON) tools/clutch_public_verify.py --root $(ROOT) --json
@@ -41,4 +41,5 @@ install-smoke:
 	@$(PYTHON) tools/clutch_public_install_smoke.py --root $(ROOT) --json
 
 serve-landing:
+	@printf '%s\n' "Serving CLUTCH landing page at http://127.0.0.1:$(PORT)/site/"
 	@$(PYTHON) -m http.server $(PORT) --bind 127.0.0.1

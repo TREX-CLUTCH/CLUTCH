@@ -22,8 +22,10 @@ http://127.0.0.1:8080/site/
 ```
 
 The page must load `site/styles.css` and `assets/clutch.png` from the same
-release tree. It must not depend on external scripts, private lab URLs, private
-machine names, private IP addresses, or credentials.
+release tree. The smoke also fetches the key linked public docs from the page:
+Prompt Cookbook, First-Use Acceptance Runbook, Launch Readiness Brief, and FAQ.
+It must not depend on external scripts, private lab URLs, private machine names,
+private IP addresses, or credentials.
 
 The visual policy is intentionally strict: the hero H1 is the only landing page
 text that uses the sans-serif face. Every other heading, control, caption, and
@@ -52,6 +54,7 @@ Before treating the page as publishable:
 - run `tools/clutch_public_release_gate.py --root . --json`;
 - run `tools/clutch_distribution_scan.py . --json`;
 - confirm `site/index.html` links to the intended public GitHub repository;
+- confirm the landing smoke fetches the key linked public docs;
 - confirm `assets/clutch.png` is present and visually appropriate;
 - confirm only the hero H1 uses the sans-serif face, while all other text uses
   the serif face;

@@ -97,6 +97,16 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
         "site/index.html": f"{base_url}/site/",
         "site/styles.css": f"{base_url}/site/styles.css",
         "assets/clutch.png": f"{base_url}/assets/clutch.png",
+        "docs/prompt-cookbook.md": f"{base_url}/docs/prompt-cookbook.md",
+        "docs/first-use-acceptance.md": f"{base_url}/docs/first-use-acceptance.md",
+        "docs/launch-readiness-brief.md": f"{base_url}/docs/launch-readiness-brief.md",
+        "docs/faq.md": f"{base_url}/docs/faq.md",
+    }
+    markdown_needles = {
+        "docs/prompt-cookbook.md": ("Prompt Cookbook", "First Install", "Multi-PC Collab"),
+        "docs/first-use-acceptance.md": ("First-Use Acceptance Runbook", "session_entry_repeat"),
+        "docs/launch-readiness-brief.md": ("Public Launch Readiness Brief", "GitHub Page Review"),
+        "docs/faq.md": ("Frequently Asked Questions", "public repository visibility"),
     }
     fetch_results: list[dict[str, Any]] = []
     try:
@@ -163,6 +173,14 @@ def landing_smoke(*, root: Path, timeout: float) -> dict[str, Any]:
                         path,
                         f"expected {expected_type}, got {result['content_type']}",
                     )
+            elif path.endswith(".md"):
+                text = body.decode("utf-8", errors="replace")
+                check_text(
+                    findings=findings,
+                    path=path,
+                    text=text,
+                    needles=markdown_needles[path],
+                )
     finally:
         server.shutdown()
         server.server_close()

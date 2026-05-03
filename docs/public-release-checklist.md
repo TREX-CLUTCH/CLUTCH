@@ -137,7 +137,8 @@ Expected result:
   release review, and safety boundaries;
 - the GitHub call-to-action points to the intended public repository;
 - `tools/clutch_public_landing_smoke.py --root . --json` reports
-  `status=passed`;
+  `status=passed` and fetches the linked Prompt Cookbook, First-Use Acceptance
+  Runbook, Launch Readiness Brief, and FAQ;
 - the repository homepage points to the online landing page preview;
 - no public hosting or GitHub Pages setting is enabled until the operator
   explicitly approves it.
