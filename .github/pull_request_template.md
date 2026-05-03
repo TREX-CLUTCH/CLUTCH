@@ -9,6 +9,7 @@ request.
 - [ ] `python3 tools/clutch_public_release_gate.py --root . --json`
 - [ ] `python3 tools/clutch_public_visibility_review.py --root . --json`
 - [ ] `python3 tools/clutch_public_landing_smoke.py --root . --json`
+- [ ] `python3 tools/clutch_public_web_smoke.py --root . --json`
 - [ ] `python3 tools/clutch_public_collab_smoke.py --root . --json`
 - [ ] `python3 tools/clutch_public_install_smoke.py --root . --json`
 - [ ] `make verify`

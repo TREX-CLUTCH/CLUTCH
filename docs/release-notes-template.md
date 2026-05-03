@@ -101,6 +101,8 @@ Record the actual evidence for this release:
   `tools/clutch_public_visibility_review.py --root . --json`
 - landing page smoke: `tools/clutch_public_landing_smoke.py --root . --json`
   `<passed / deferred with reason>`
+- Web console smoke: `tools/clutch_public_web_smoke.py --root . --json`
+  `<passed / deferred with reason>`
 - collab transport smoke:
   `tools/clutch_public_collab_smoke.py --root . --json`
   `<passed / deferred with reason>`

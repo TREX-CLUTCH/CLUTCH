@@ -6237,7 +6237,7 @@ def git_head_short(repo_path: Path) -> str:
 
 
 def web_source_version(repo_path: Path = ROOT_DIR) -> str:
-    head = git_head_short(repo_path) or str(int(time.time()))
+    head = git_head_short(repo_path) or "nogit"
     digest = hashlib.sha256()
     seen = False
     for relative in WEB_VERSION_SURFACE:

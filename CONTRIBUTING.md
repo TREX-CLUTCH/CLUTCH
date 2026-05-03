@@ -33,6 +33,12 @@ For landing-page-only changes, also run:
 make landing-smoke
 ```
 
+For Web console or Help changes, also run:
+
+```bash
+make web-smoke
+```
+
 For collab transport changes, also run:
 
 ```bash
@@ -41,8 +47,8 @@ make collab-smoke
 
 The wrapper executes `clutch_distribution_scan.py`,
 `clutch_public_release_gate.py`, `clutch_public_visibility_review.py`,
-`clutch_public_landing_smoke.py`, `clutch_public_collab_smoke.py`, and
-`clutch_public_install_smoke.py`.
+`clutch_public_landing_smoke.py`, `clutch_public_web_smoke.py`,
+`clutch_public_collab_smoke.py`, and `clutch_public_install_smoke.py`.
 
 Expected result:
 
@@ -50,6 +56,7 @@ Expected result:
 - release gate reports `status=ready_for_operator_review`;
 - visibility review reports `status=ready_for_manual_visibility_review`;
 - landing smoke reports `status=passed`;
+- Web smoke reports `status=passed`;
 - collab smoke reports `status=passed`;
 - install smoke reports `status=passed`.
 
@@ -74,8 +81,8 @@ Do not include:
 
 ## Pull Request Checklist
 
-- I ran the scanner, release gate, landing smoke, collab smoke, and public
-  install smoke.
+- I ran the scanner, release gate, landing smoke, Web smoke, collab smoke, and
+  public install smoke.
 - I did not add private credentials, machine identifiers, paths, or network
   endpoints.
 - I kept destructive, hardware, sudo, network, and credential-changing actions

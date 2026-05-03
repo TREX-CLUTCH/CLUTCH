@@ -45,6 +45,7 @@ Run these commands from a freshly exported or cloned staging tree:
 make verify
 make visibility-review
 make landing-smoke
+make web-smoke
 make collab-smoke
 python3 tools/clutch_public_visibility_review.py --root . --json
 python3 tools/clutch_public_release_gate.py --root . --json
@@ -58,10 +59,11 @@ Required results:
 - visibility review `status=ready_for_manual_visibility_review` and
   `remote_visibility_change_performed=false`;
 - landing smoke `status=passed`;
+- Web smoke `status=passed`;
 - collab smoke `status=passed`;
 - combined verify `status=passed` with scanner, release gate, visibility
-  review, landing smoke, collab transport smoke, and install/first-project
-  smoke steps.
+  review, landing smoke, Web smoke, collab transport smoke, and
+  install/first-project smoke steps.
 
 ## Release Artifacts
 

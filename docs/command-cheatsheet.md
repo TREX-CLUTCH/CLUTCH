@@ -10,6 +10,7 @@ From the extracted release root:
 
 ```bash
 make verify
+make web-smoke
 ```
 
 Equivalent detailed checks:
@@ -19,15 +20,17 @@ python3 tools/clutch_distribution_scan.py . --json
 python3 tools/clutch_public_release_gate.py --root . --json
 python3 tools/clutch_public_visibility_review.py --root . --json
 python3 tools/clutch_public_landing_smoke.py --root . --json
+python3 tools/clutch_public_web_smoke.py --root . --json
 python3 tools/clutch_public_collab_smoke.py --root . --json
 python3 tools/clutch_public_install_smoke.py --root . --json
 ```
 
 Expected result: scanner findings are zero, the release gate says
 `ready_for_operator_review`, visibility review says
-`ready_for_manual_visibility_review`, landing smoke passes, collab smoke
-records main/worker/request/result evidence, and the clean install smoke can
-create a first project without private defaults.
+`ready_for_manual_visibility_review`, landing smoke passes, Web smoke proves
+first-run Web auto-start and Help/Monitor assets, collab smoke records
+main/worker/request/result evidence, and the clean install smoke can create a
+first project without private defaults.
 
 For a feature-by-feature proof plan, use
 [Verification Matrix](verification-matrix.md).

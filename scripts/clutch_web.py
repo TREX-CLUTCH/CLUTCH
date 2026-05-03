@@ -62,7 +62,7 @@ def git_head_version() -> str:
             return re.sub(r"[^A-Za-z0-9_.-]", "", result.stdout.strip())
     except OSError:
         pass
-    return str(int(time.time()))
+    return "nogit"
 
 
 def static_asset_version() -> str:

@@ -200,15 +200,19 @@ Expected result:
 ## 6. Web Console Smoke
 
 Start the Web console and verify the Dashboard, Monitor, Commands, Backups, and
-Help tabs.
+Help tabs. Prefer the packaged smoke first because it checks first-run Web
+auto-start, backend health, assets, and cleanup in a temporary install.
 
 ```bash
+make web-smoke
+python3 tools/clutch_public_web_smoke.py --root . --json
 python3 scripts/clutch_ctl.py web-console-start --host 127.0.0.1 --port 8765 --replace-stale
 python3 scripts/clutch_ctl.py web-console-status
 ```
 
 Expected result:
 
+- `clutch_public_web_smoke.py` reports `status=passed`;
 - backend version matches the current checkout;
 - command registry, command surface, and render readiness are ok;
 - Help explains CLUTCH's operating protocol in public-facing language;

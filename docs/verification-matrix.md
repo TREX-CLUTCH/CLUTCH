@@ -11,7 +11,7 @@ lab workspace.
 | Private-data scanner | `python3 tools/clutch_distribution_scan.py . --json` | `finding_count=0` |
 | Public release gate | `python3 tools/clutch_public_release_gate.py --root . --json` | `status=ready_for_operator_review` |
 | Final visibility review | `python3 tools/clutch_public_visibility_review.py --root . --json` | `status=ready_for_manual_visibility_review` and `remote_visibility_change_performed=false` |
-| Combined public verification | `make verify` | scanner, release gate, visibility review, landing smoke, collab transport smoke, and install smoke pass |
+| Combined public verification | `make verify` | scanner, release gate, visibility review, landing smoke, Web smoke, collab transport smoke, and install smoke pass |
 | Static landing page | `make landing-smoke` | `status=passed`, local CSS loads, `assets/clutch.png` loads, GitHub CTA is present |
 
 ## First Install Gates
@@ -41,6 +41,7 @@ lab workspace.
 | --- | --- | --- |
 | Web console | `python3 scripts/clutch_ctl.py web-console-start --host 127.0.0.1 --port 8765` | Dashboard, Monitor, Commands, Backups, and Help render locally |
 | Web health | `python3 scripts/clutch_ctl.py web-console-status` | backend reports ready and the command surface is render-ready |
+| Packaged Web smoke | `python3 tools/clutch_public_web_smoke.py --root . --json` | first-run config enables Web auto-start, session-entry reports readiness, `/api/health` is ready, and Help/Monitor/Backups static UI markers load |
 | Help tab | open `http://127.0.0.1:8765` | Help describes CLUTCH as a local-first multi-PC Codex layer for AI and robotics labs |
 | Collab monitor | `python3 scripts/clutch_ctl.py collab-monitor-status --project <project_id> --json` | role source, monitor visibility, worker freshness, and recent evidence are visible |
 | Notifications | `python3 scripts/clutch_ctl.py notify-mode-long --minutes 5` | notification preference changes locally and does not authorize any gated action |

@@ -75,6 +75,8 @@ The release is not ready for public visibility until all of these are true:
   `ready_for_manual_visibility_review`.
 - `remote_visibility_change_performed=false`.
 - `tools/clutch_public_landing_smoke.py --root . --json` passes.
+- `tools/clutch_public_web_smoke.py --root . --json` passes with first-run Web
+  auto-start, `/api/health`, Help, Monitor, Backups, and asset evidence.
 - `tools/clutch_public_collab_smoke.py --root . --json` passes with main,
   worker, request, result, and recent event evidence.
 - `tools/clutch_public_install_smoke.py --root . --json` passes or has a

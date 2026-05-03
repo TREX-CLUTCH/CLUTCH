@@ -140,6 +140,13 @@ To check only the static landing page over local HTTP:
 make landing-smoke
 ```
 
+To verify the first-run Web console auto-start and Help/Monitor UI:
+
+```bash
+make web-smoke
+python3 tools/clutch_public_web_smoke.py --root . --json
+```
+
 To prove the packaged file-based collab transport locally:
 
 ```bash
@@ -261,13 +268,17 @@ staged tree is treated as publishable, CLUTCH expects:
   operator-approval boundaries visible;
 - `make verify` to provide a familiar public repo verification entrypoint;
 - `tools/clutch_public_verify.py --root . --json` to run the scanner, release
-  gate, visibility review, collab smoke, and install smoke from one command;
+  gate, visibility review, landing smoke, Web smoke, collab smoke, and install
+  smoke from one command;
 - `make visibility-review` and
   `tools/clutch_public_visibility_review.py --root . --json` to produce a
   read-only final visibility review with
   `remote_visibility_change_performed=false`;
 - `tools/clutch_public_landing_smoke.py --root . --json` to prove the static
   landing page, CSS, brand image, and GitHub call-to-action load over HTTP;
+- `tools/clutch_public_web_smoke.py --root . --json` to prove first-run Web
+  auto-start, `/api/health`, static assets, Help, Monitor, Backups, and command
+  registry readiness;
 - `make collab-smoke` and `tools/clutch_public_collab_smoke.py --root . --json`
   to prove main/worker/request/result evidence in the packaged file transport;
 - `tools/clutch_public_install_smoke.py` to pass clean install smoke and

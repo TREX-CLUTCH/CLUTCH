@@ -205,9 +205,10 @@ Before ending the demo, run:
 make verify
 python3 tools/clutch_public_release_gate.py --root . --json
 python3 tools/clutch_public_landing_smoke.py --root . --json
+python3 tools/clutch_public_web_smoke.py --root . --json
 ```
 
 The expected public release state is zero scanner findings, release gate status
-`ready_for_operator_review`, a passing clean install smoke, a passing landing
-smoke, and a repository visibility change only after the operator explicitly
+`ready_for_operator_review`, a passing clean install smoke, passing landing and
+Web smoke, and a repository visibility change only after the operator explicitly
 approves it.

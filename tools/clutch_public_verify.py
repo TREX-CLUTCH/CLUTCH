@@ -2,8 +2,9 @@
 """Run the public CLUTCH verification path from one command.
 
 This wrapper runs the private-data scanner, public release gate, read-only
-visibility review, landing-page HTTP smoke, file-based collab transport smoke,
-and optional install/first-project smoke for an exported CLUTCH public tree.
+visibility review, landing-page HTTP smoke, first-run Web console smoke,
+file-based collab transport smoke, and optional install/first-project smoke for
+an exported CLUTCH public tree.
 """
 
 from __future__ import annotations
@@ -92,6 +93,17 @@ def verify(*, root: Path, skip_install_smoke: bool, keep_temp: bool) -> dict[str
                 cwd=root,
             )
         )
+    if steps[-1]["ok"]:
+        command = [
+            sys.executable,
+            str(root / "tools" / "clutch_public_web_smoke.py"),
+            "--root",
+            str(root),
+            "--json",
+        ]
+        if keep_temp:
+            command.append("--keep-temp")
+        steps.append(run_step("web_console_smoke", command, cwd=root))
     if steps[-1]["ok"]:
         command = [
             sys.executable,
