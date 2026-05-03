@@ -126,8 +126,8 @@ Expected result:
   Web UI, and privacy-first setup advantages are visible;
 - the first hero headline is a 2-4 word hook title, not a long explanatory
   sentence or a sparse brand-only label;
-- headings and controls use a sans-serif face while descriptive body copy uses
-  a serif face;
+- only the landing page hero H1 uses the sans-serif face; all other landing
+  page copy, headings, controls, captions, and descriptions use the serif face;
 - the guided first-run tutorial, multi-PC topology, and safety boundary are
   visible;
 - the CLUTCH image renders;

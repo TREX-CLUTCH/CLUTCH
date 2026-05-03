@@ -316,6 +316,8 @@ REQUIRED_TEXT = {
         "Web Console Smoke",
         "Multi-PC Collab Smoke",
         "2-4 word hook title",
+        "only the landing page hero H1 uses the sans-serif face",
+        "all other landing",
         "10-minute first-use path",
         "release zip checksum",
         "SHA256 values for the checksum file, release notes, and release manifest",
@@ -462,6 +464,8 @@ REQUIRED_TEXT = {
         "operator explicitly approves",
         "tools/clutch_public_landing_smoke.py --root . --json",
         "tools/clutch_public_release_gate.py --root . --json",
+        "hero H1 is the only landing page",
+        "Every other heading, control, caption, and",
         "artifact hygiene",
     ),
     "docs/public-demo-script.md": (
