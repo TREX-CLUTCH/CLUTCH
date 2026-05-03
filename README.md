@@ -262,8 +262,9 @@ staged tree is treated as publishable, CLUTCH expects:
 
 - the public release gate to report `ready_for_operator_review`;
 - scanner checks to report `finding_count=0`;
-- GitHub Actions to run the same scanner, release gate, and install smoke on
-  public pushes and pull requests;
+- GitHub Actions to run the same scanner, release gate, visibility review,
+  landing smoke, Web smoke, collab smoke, and install smoke on public pushes
+  and pull requests;
 - issue templates and the PR template to keep reports sanitized and
   operator-approval boundaries visible;
 - `make verify` to provide a familiar public repo verification entrypoint;

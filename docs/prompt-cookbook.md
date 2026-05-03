@@ -134,8 +134,8 @@ surface until I explicitly approve the exact action.
 
 ```text
 Run make verify from the public release root and summarize scanner, release
-gate, visibility review, landing smoke, install smoke, and first-project smoke
-status.
+gate, visibility review, landing smoke, Web smoke, collab smoke, install smoke,
+and first-project smoke status.
 ```
 
 ```text

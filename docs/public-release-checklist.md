@@ -85,8 +85,9 @@ public release gate, release docs, privacy docs, and final visibility-gate text
 are present before a manual operator action.
 
 The exported GitHub Actions workflow runs the same scanner, public release
-gate, landing smoke, and install smoke on public pushes and pull requests. It
-is supporting evidence, not a replacement for this checklist.
+gate, visibility review, landing smoke, Web smoke, collab smoke, and install
+smoke on public pushes and pull requests. It is supporting evidence, not a
+replacement for this checklist.
 
 Confirm the exported issue templates, pull request template, and
 `CONTRIBUTING.md` ask users to remove private machine data and preserve
