@@ -792,15 +792,27 @@ def check_install_guidance_sequence(root: Path, findings: list[dict[str, str]]) 
             cursor = index + len(command)
 
 
+def normalize_markdown_link_target(target: str) -> str:
+    target = target.strip()
+    if not target:
+        return ""
+    if target.startswith("<"):
+        closing = target.find(">")
+        if closing != -1:
+            return target[1:closing].strip()
+    return target.split()[0].strip()
+
+
 def check_markdown_links(root: Path, findings: list[dict[str, str]]) -> None:
     for markdown_path in sorted(root.rglob("*.md")):
         if any(part in {".git", "__pycache__"} for part in markdown_path.relative_to(root).parts):
             continue
         text = read_text(markdown_path)
         for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
-            if target.startswith(("http://", "https://", "mailto:", "#")):
+            link_target = normalize_markdown_link_target(target)
+            if link_target.startswith(("http://", "https://", "mailto:", "#")):
                 continue
-            target_path = target.split("#", 1)[0].strip()
+            target_path = link_target.split("#", 1)[0].strip()
             if not target_path:
                 continue
             candidate = (markdown_path.parent / target_path).resolve()
