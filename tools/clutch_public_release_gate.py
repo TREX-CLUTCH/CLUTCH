@@ -16,6 +16,7 @@ from typing import Any
 REQUIRED_FILES = (
     ".gitignore",
     "CONTRIBUTING.md",
+    "LICENSE",
     "Makefile",
     ".github/ISSUE_TEMPLATE/bug_report.yml",
     ".github/ISSUE_TEMPLATE/config.yml",
@@ -112,6 +113,12 @@ REQUIRED_TEXT = {
         "restore-smoke/",
         "*.log",
         "*.tmp",
+    ),
+    "LICENSE": (
+        "MIT License",
+        "Copyright (c) 2026 Sangho Lee and CLUTCH contributors",
+        "Permission is hereby granted, free of charge",
+        "THE SOFTWARE IS PROVIDED \"AS IS\"",
     ),
     ".github/workflows/public-ci.yml": (
         "permissions:",
