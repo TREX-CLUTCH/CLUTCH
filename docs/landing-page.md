@@ -34,12 +34,13 @@ research-lab tone requested for public launch.
 
 ## GitHub Pages
 
-After the repository is ready to become public, GitHub Pages can serve the same
-static files. Use the repository root as the Pages source and set the public
-landing URL to:
+After the repository is ready to become public, GitHub Pages serves the same
+static files through `.github/workflows/pages.yml`. The workflow builds a Pages
+artifact from `site/index.html`, `site/styles.css`, `assets/`, and the linked
+public docs, then publishes it at the repository Pages root:
 
 ```text
-https://<github-owner>.github.io/<repo-name>/site/
+https://<github-owner>.github.io/<repo-name>/
 ```
 
 Keep the repository private until the operator explicitly approves changing
@@ -60,6 +61,8 @@ Before treating the page as publishable:
   the serif face;
 - confirm the page explains clean first run, local smoke checks, and artifact
   boundaries from a user perspective;
+- confirm the Pages workflow deploys the `site/` landing page to the official
+  root URL after the repository becomes public;
 - keep the release zip, checksum file, manifest, and release notes together.
 
 The landing page is marketing-facing, but it is also release evidence. If it

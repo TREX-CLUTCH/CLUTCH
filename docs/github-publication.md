@@ -93,5 +93,7 @@ the public switch after reviewing:
 
 After the repository becomes public, clone it in a fresh directory and rerun
 `make verify`. If GitHub Pages will move from the separate landing preview repo
-to the public distribution repo, enable it only after the public switch and
-verify the resulting URL with the same visual and HTTP checks.
+to the public distribution repo, enable Pages only after the public switch. The
+public repo ships `.github/workflows/pages.yml`, which publishes the `site/`
+landing page and linked public docs to `https://trex-clutch.github.io/CLUTCH/`.
+Verify that URL with the same visual and HTTP checks.
