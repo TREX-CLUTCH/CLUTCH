@@ -111,8 +111,7 @@ Record the actual evidence for this release:
 - first project smoke: `<passed / deferred with reason>`
 - repeated setup prompt check: `<passed / failed>`
 - project workspace hygiene: `<passed / failed>`
-- Web console smoke: `<passed / deferred with reason>`
-- multi-PC collab smoke: `<passed / deferred with reason>`
+- real two-machine collab rehearsal: `<passed / deferred with reason>`
 - release zip SHA256: `<sha256>`
 - checksum file SHA256: `<sha256>`
 - release notes SHA256: `<sha256>`
